@@ -19,6 +19,9 @@ import java.util.List;
         @JoinColumn(name = "user_id")
         private User owner;
 
+        @Column
+        private String description;
+
         @OneToMany(mappedBy = "campaign", cascade = CascadeType.ALL)
         private List<Character> characters = new ArrayList<>();
     }

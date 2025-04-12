@@ -4,7 +4,6 @@ package mythosforge.fable_minds.service;
 
 import mythosforge.fable_minds.models.User;
 import mythosforge.fable_minds.repository.UserRepository;
-import mythosforge.fable_minds.service.IUserService;
 
 import org.springframework.stereotype.Service;
 
