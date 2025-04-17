@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +22,10 @@ public class User {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Column(nullable = false)
+    private boolean enabled = true;
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<Campaign> campaigns = new ArrayList<>();
 
 

@@ -9,5 +9,4 @@ public class FableMindsApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(FableMindsApplication.class, args);
 	}
-
 }
