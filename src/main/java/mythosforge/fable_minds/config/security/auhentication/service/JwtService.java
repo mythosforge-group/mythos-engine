@@ -1,6 +1,6 @@
 package mythosforge.fable_minds.config.security.auhentication.service;
 
-import mythosforge.fable_minds.models.User;
+import mythosforge.fable_minds.models.Users;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +26,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
 
-    public String generateToken(User user) {
+    public String generateToken(Users user) {
         return Jwts.builder()
                 .setSubject(user.getUsername())
                 .claim("email", user.getEmail())

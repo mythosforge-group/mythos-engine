@@ -1,6 +1,6 @@
 package mythosforge.fable_minds.config.security.auhentication.service;
 
-import mythosforge.fable_minds.models.User;
+import mythosforge.fable_minds.models.Users;
 import mythosforge.fable_minds.repository.UserRepository;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
+        Users user = userRepository.findByUsername(username)
             .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
         
         // Converte as roles do usuário para GrantedAuthority
