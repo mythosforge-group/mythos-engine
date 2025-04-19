@@ -2,7 +2,7 @@ package mythosforge.fable_minds.service;
 
 
 
-import mythosforge.fable_minds.models.User;
+import mythosforge.fable_minds.models.Users;
 import mythosforge.fable_minds.repository.UserRepository;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,23 +23,23 @@ public class UserService implements IUserService {
         }
 
         @Override
-        public User createUser(User user) {
+        public Users createUser(Users user) {
             user.setPassword(passwordEncoder.encode(user.getPassword())); // Codifique a senha
             return userRepository.save(user);
         }
 
         @Override
-        public Optional<User> getUserById(Long id) {
+        public Optional<Users> getUserById(Long id) {
             return userRepository.findById(id);
         }
 
         @Override
-        public List<User> getAllUsers() {
+        public List<Users> getAllUsers() {
             return userRepository.findAll();
         }
 
         @Override
-        public User updateUser(Long id, User userDetails) {
+        public Users updateUser(Long id, Users userDetails) {
             return userRepository.findById(id).map(user -> {
                 user.setUsername(userDetails.getUsername());
                 user.setEmail(userDetails.getEmail());
