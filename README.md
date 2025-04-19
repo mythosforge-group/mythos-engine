@@ -31,6 +31,14 @@ Este repositório contém o backend da aplicação, desenvolvido com **Java + Sp
 
 ---
 
+### Pré-requisitos
+
+- Java 21+
+- Maven 3.8+
+- PostgreSQL
+
+---
+
 ## 📁 Estrutura do Projeto
 ```
 fables-minds-api/
@@ -46,7 +54,7 @@ fables-minds-api/
 │   │   |           ├── service/                     # Camada de serviço com a lógica de negócio da aplicação
 │   │   |           └── FablesMindsApplication.java  # Classe principal que inicia a aplicação Spring Boot
 |   |   └── resources/                               # Pasta para arquivos que não são de código java. Em geral são arquivos de configurações
-|   |       |── application.properties               # Arquivo de variáveis de ambiente do projeto 
+|   |       |── application.yaml                     # Arquivo de variáveis de ambiente do projeto 
 │   └── test/                                        # Pacote de testes unitários e de integração
 ├── pom.xml                                          # Arquivo de build com as dependências do Maven
 └── README.md                                        # Documentação do projeto
@@ -55,19 +63,69 @@ fables-minds-api/
 
 ## 🧪 Executando Localmente
 
-### Pré-requisitos
-
-- Java 21+
-- Maven 3.8+
-- PostgreSQL
-
-### Configuração do banco
-
-Crie um banco no PostgreSQL e atualize o `application.properties`:
-
-```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/fables_db
-spring.datasource.username=seu_usuario
-spring.datasource.password=sua_senha
-spring.jpa.hibernate.ddl-auto=update
+**Clone o repositório:**
+```bash
+   git clone https://github.com/seu-usuario/fables-minds-api.git
+   cd fables-minds-api
 ```
+### Configure o banco de dados:
+
+O projeto utiliza por padrão um banco H2 in-memory, mas também pode usar PostgreSQL.
+
+Para H2, nenhuma configuração adicional é necessária.
+
+Para usar PostgreSQL, [application.yaml](src\main\resources\application.yaml).
+
+Execute o projeto com Maven. Na pasta raiz do projeto, execute:
+
+```bash
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+```
+Ou com sua IDE (IntelliJ, Eclipse, VSCode), executando a classe FablesMindsApplication.
+
+### 🧩 Acessando o Banco de Dados H2 (in-memory)
+O H2 Database é carregado na memória em tempo de execução, útil para testes e desenvolvimento.
+
+Acesso via navegador:
+Com a aplicação rodando, acesse:
+
+```bash
+http://localhost:8080/h2-console
+```
+Use as credenciais abaixo (ou veja em [application-dev.yaml](src\main\resources\application-dev.yaml)):
+
+- *JDBC URL:* jdbc:h2:mem:fabledb
+
+- *User Name:* root
+
+- *Password:*
+
+Clique em "Connect".
+
+⚠️ Por padrão, o console H2 só estará acessível se spring.h2.console.enabled=true estiver no application.yaml.
+
+### 🛠️ Como usar outro banco (PostgreSQL, etc.)
+Para usar um banco PostgreSQL local:
+
+Crie um banco:
+
+```sql
+CREATE DATABASE fables_db;
+```
+Atualize o arquivo application.yaml:
+```yaml
+spring:
+    datasource:
+        url: jdbc:postgresql://localhost:5432/fables_db
+        username: seu_usuario
+        password: sua_senha
+    jpa:
+        hibernate:
+            ddl-auto: update
+```
+Reinicie a aplicação. As tabelas serão criadas automaticamente.
+
+📌 Observações
+O banco H2 some ao desligar a aplicação. Use PostgreSQL para persistência real em ambiente de desenvolvimento.
+
+## ⚠️ A documentação Swagger estará disponível em breve.
