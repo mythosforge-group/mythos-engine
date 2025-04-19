@@ -13,10 +13,12 @@ import java.util.Set;
 
 import org.hibernate.annotations.Comment;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "users")
 @Data
-public class User {
+public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -47,6 +49,7 @@ public class User {
     private Set<Role> roles;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    @JsonManagedReference    // ← controla o “lado pai” da relação
     @Comment("List of campaigns owned by the user")
     private List<Campaign> campaigns = new ArrayList<>();
 }
