@@ -35,6 +35,7 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
                 .requestMatchers("/h2-console/**").permitAll() // libera h2-console
                 .anyRequest().authenticated()
             )
