@@ -29,19 +29,20 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(AbstractHttpConfigurer::disable)
-            .headers(headers -> headers
-                .frameOptions(frame -> frame.disable()) // necessário pro H2 funcionar
-            )
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
-                .requestMatchers("/h2-console/**").permitAll() // libera h2-console
-                .anyRequest().authenticated()
-            )
-            .userDetailsService(userDetailsService);
+                .csrf(AbstractHttpConfigurer::disable)
+                .headers(headers -> headers
+                        .frameOptions(frame -> frame.disable()) // necessário pro H2 funcionar
+                )
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.POST, "/auth/**").permitAll() // Permite POST no login
+                        .requestMatchers(HttpMethod.OPTIONS, "/auth/**").permitAll() // Permite OPTIONS para CORS
+                        .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+                        .requestMatchers("/h2-console/**").permitAll() // Libera h2-console
+                        .anyRequest().authenticated()
+                )
+                .userDetailsService(userDetailsService);
         return http.build();
     }
 
@@ -56,19 +57,7 @@ public class SecurityConfig {
     }
 
 
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5173") // Adicionando a URL do frontend correto
-                        .allowedMethods("GET", "POST", "PUT", "DELETE")
-                        .allowedHeaders("*")
-                        .allowCredentials(true); // Permite cookies e credenciais se necessário
-            }
-        };
-    }
+
 
 
 
