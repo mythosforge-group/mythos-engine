@@ -2,8 +2,12 @@ package mythosforge.fable_minds.controller;
 
 import mythosforge.fable_minds.models.Users;
 import mythosforge.fable_minds.service.UserService;
+import mythosforge.fable_minds.models.ErrorResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
+
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,11 +25,21 @@ public class UserController {
         this.userService = userService;
     }
 
+    // No backend, ao registrar um usuário
+    // No backend, ao registrar um usuário
     @PostMapping
-    public ResponseEntity<Users> createUser(@RequestBody Users user) {
-        Users created = userService.createUser(user);
-        return ResponseEntity.ok(created);
+    public ResponseEntity<?> registerUser(@RequestBody Users user) {
+        try {
+            Users created = userService.createUser(user);
+            return ResponseEntity.ok(created);
+        } catch (Exception e) {
+            // Retorna o erro em formato JSON
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse("Erro ao registrar usuário.", e.getMessage()));
+        }
     }
+
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Users> getUserById(@PathVariable Long id) {
