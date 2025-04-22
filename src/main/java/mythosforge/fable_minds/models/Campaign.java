@@ -35,7 +35,7 @@ public class Campaign {
     private String title;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(nullable = false, name = "user_id")
     @JsonBackReference      // ← controla o “lado filho” da relação
     @Comment("The user who owns the campaign")
     private Users owner;
