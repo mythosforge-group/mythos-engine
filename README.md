@@ -128,4 +128,5 @@ Reinicie a aplicação. As tabelas serão criadas automaticamente.
 📌 Observações
 O banco H2 some ao desligar a aplicação. Use PostgreSQL para persistência real em ambiente de desenvolvimento.
 
-## ⚠️ A documentação Swagger estará disponível em breve.
+##  📚 A documentação do Swagger
+Para ver a documentação da API acesse [/swagger-ui/index.html]()
