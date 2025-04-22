@@ -43,7 +43,7 @@ public class UserService implements IUserService {
             return userRepository.findById(id).map(user -> {
                 user.setUsername(userDetails.getUsername());
                 user.setEmail(userDetails.getEmail());
-                user.setPassword(userDetails.getPassword());
+                user.setPassword(userDetails.getPassword() != null ? passwordEncoder.encode(userDetails.getPassword()) : user.getPassword()); // Atualiza a senha se fornecida
                 return userRepository.save(user);
             }).orElseThrow(() -> new RuntimeException("Usuário não encontrado com id: " + id));
         }

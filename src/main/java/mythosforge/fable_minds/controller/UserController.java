@@ -56,7 +56,7 @@ public class UserController {
         try {
             return ResponseEntity.ok(userService.updateUser(id, user));
         } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().header("message", e.getMessage()).build();
         }
     }
 
