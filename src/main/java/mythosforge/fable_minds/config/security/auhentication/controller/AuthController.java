@@ -8,13 +8,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.extern.slf4j.Slf4j;
 import mythosforge.fable_minds.config.security.auhentication.dto.LoginRequestDTO;
 import mythosforge.fable_minds.config.security.auhentication.service.AuthenticationService;
 
 @RestController
 @RequestMapping("/auth")
-@Slf4j
 public class AuthController {
 
     private final AuthenticationService authenticationService;

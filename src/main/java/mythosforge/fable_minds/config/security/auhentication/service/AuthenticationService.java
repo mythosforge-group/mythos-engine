@@ -2,16 +2,12 @@ package mythosforge.fable_minds.config.security.auhentication.service;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import lombok.extern.log4j.Log4j;
-import lombok.extern.slf4j.Slf4j;
 import mythosforge.fable_minds.models.Users;
 import mythosforge.fable_minds.repository.UserRepository;
 
 @Service
-@Slf4j
 public class AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
