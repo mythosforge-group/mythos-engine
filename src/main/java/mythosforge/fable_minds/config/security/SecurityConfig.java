@@ -37,6 +37,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/auth/**").permitAll() // Permite POST no login
                         .requestMatchers(HttpMethod.OPTIONS, "/auth/**").permitAll() // Permite OPTIONS para CORS
                         .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+                        .requestMatchers("/v3/**").permitAll() // Libera Swagger UI
+                        .requestMatchers("/swagger-ui/**").permitAll() // Libera Swagger UI
                         .requestMatchers("/h2-console/**").permitAll() // Libera h2-console
                         .anyRequest().authenticated()
                 )
