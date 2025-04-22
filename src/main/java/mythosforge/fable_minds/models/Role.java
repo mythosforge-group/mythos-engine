@@ -25,8 +25,4 @@ public class Role {
     @NotBlank(message = "Role name cannot be blank")
     @Size(max = 50, message = "Role name must be less than 50 characters")
     private String name;
-
-    // @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
-    // @Comment("Set of users associated with this role")
-    // private Set<Users> users;
 }

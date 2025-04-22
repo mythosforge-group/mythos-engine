@@ -2,6 +2,7 @@ package mythosforge.fable_minds.config.security.auhentication.filter;
 
 import java.io.IOException;
 
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -11,12 +12,10 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
 import mythosforge.fable_minds.config.security.auhentication.service.CustomUserDetailsService;
 import mythosforge.fable_minds.config.security.auhentication.service.JwtService;
 
 @Component
-@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
@@ -29,9 +28,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain
         ) throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
 

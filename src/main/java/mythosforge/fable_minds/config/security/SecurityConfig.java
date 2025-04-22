@@ -27,18 +27,22 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(AbstractHttpConfigurer::disable)
-            .headers(headers -> headers
-                .frameOptions(frame -> frame.disable()) // necessário pro H2 funcionar
-            )
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
-                .requestMatchers("/h2-console/**").permitAll() // libera h2-console
-                .anyRequest().authenticated()
-            )
-            .userDetailsService(userDetailsService);
+                .csrf(AbstractHttpConfigurer::disable)
+                .headers(headers -> headers
+                        .frameOptions(frame -> frame.disable()) // necessário pro H2 funcionar
+                )
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.POST, "/auth/**").permitAll() // Permite POST no login
+                        .requestMatchers(HttpMethod.OPTIONS, "/auth/**").permitAll() // Permite OPTIONS para CORS
+                        .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+                        .requestMatchers("/v3/**").permitAll() // Libera Swagger UI
+                        .requestMatchers("/swagger-ui/**").permitAll() // Libera Swagger UI
+                        .requestMatchers("/h2-console/**").permitAll() // Libera h2-console
+                        .anyRequest().authenticated()
+                )
+                .userDetailsService(userDetailsService);
         return http.build();
     }
 
