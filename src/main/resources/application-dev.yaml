@@ -1,25 +1,15 @@
 spring:
-    sql:
-        init:
-            mode: always
-            platform: h2
-            # schema-locations: classpath:data/schema-dev.sql
-            data-locations: classpath:data/data-dev.sql
     datasource:
-        url: jdbc:h2:mem:fabledb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-        driver-class-name: org.h2.Driver
+        url: jdbc:postgresql://ep-snowy-boat-a4p9m5i9-pooler.us-east-1.aws.neon.tech/fabledb?sslmode=require
         username: root
-        password: pass
+        password: npg_F7Mpf2bdQyji
+        driver-class-name: org.postgresql.Driver
     jpa:
+        open-in-view: false
         hibernate:
             ddl-auto: update
         show-sql: true
-        # database-platform: org.hibernate.dialect.H2Dialect
-        defer-datasource-initialization: true
-    h2:
-        console:
-            enabled: true
-            path: /h2-console
+        database-platform: org.hibernate.dialect.PostgreSQLDialect
 logging:
     level:
         org: 
