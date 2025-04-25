@@ -2,7 +2,7 @@ spring:
     application:
         name: fable-minds
     profiles:
-        active: dev
+        active: test
     output:
         ansi:
             enabled: ALWAYS

@@ -3,8 +3,6 @@ package mythosforge.fable_minds.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,9 +18,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import mythosforge.fable_minds.models.Campaign;
-import mythosforge.fable_minds.models.Users;
 import mythosforge.fable_minds.service.CampaignService;
-import mythosforge.fable_minds.service.UserService;
 
 
 
@@ -35,11 +31,9 @@ import mythosforge.fable_minds.service.UserService;
 @Slf4j
 public class CampaignController {
     private final CampaignService campaignService;
-    private final UserService userService;
 
-    public CampaignController(CampaignService campaignService, UserService userService) {
+    public CampaignController(CampaignService campaignService) {
         this.campaignService = campaignService;
-        this.userService = userService;
     }
 
     @Operation(
