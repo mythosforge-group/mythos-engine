@@ -28,8 +28,9 @@ public class JwtService {
 
     public String generateToken(Users user) {
         return Jwts.builder()
-                .setSubject(user.getUsername())
+                .setSubject(String.valueOf(user.getId()))
                 .claim("id", user.getId())
+                .claim("username", user.getUsername())
                 .claim("email", user.getEmail())
                 .claim("roles", user.getRoles().stream()
                         .map(role -> role.getName())
@@ -56,5 +57,15 @@ public class JwtService {
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
+    }
+
+    public Long extractUserId(String token) {
+        String subject = Jwts.parserBuilder()
+            .setSigningKey(getSigningKey())
+            .build()
+            .parseClaimsJws(token)
+            .getBody()
+            .getSubject();
+        return Long.parseLong(subject);
     }
 }
