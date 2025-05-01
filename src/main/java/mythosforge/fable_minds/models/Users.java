@@ -48,7 +48,7 @@ public class Users {
     )
     private Set<Role> roles;
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference    // ← controla o “lado pai” da relação
     @Comment("List of campaigns owned by the user")
     private List<Campaign> campaigns = new ArrayList<>();

@@ -1,5 +1,7 @@
 package mythosforge.fable_minds.controller;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import mythosforge.fable_minds.config.security.auhentication.dto.UpdateUserDTO;
+import mythosforge.fable_minds.config.security.auhentication.dto.UserRegisterDTO;
 import mythosforge.fable_minds.models.ErrorResponse;
 import mythosforge.fable_minds.models.Users;
 import mythosforge.fable_minds.service.UserService;
@@ -28,12 +32,16 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<?> registerUser(@RequestBody Users user) {
+    public ResponseEntity<?> registerUser(@RequestBody UserRegisterDTO userRegisterDTO) {
         try {
+            Users user = new Users();
+            user.setUsername(userRegisterDTO.getUsername());
+            user.setEmail(userRegisterDTO.getEmail());
+            user.setPassword(userRegisterDTO.getPassword());
+
             Users created = userService.createUser(user);
             return ResponseEntity.ok(created);
         } catch (Exception e) {
-            // Retorna o erro em formato JSON
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ErrorResponse("Erro ao registrar usuário.", e.getMessage()));
         }
@@ -52,17 +60,26 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Users> updateUser(@PathVariable Long id, @RequestBody Users user) {
+    public ResponseEntity<Map<String, Object>> updateUser(@PathVariable Long id, @RequestBody UpdateUserDTO userDTO) {
         try {
-            return ResponseEntity.ok(userService.updateUser(id, user));
+            Users updatedUser = userService.updateUser(id, userDTO);
+            Map<String, Object> response = new HashMap<>();
+            response.put("id", updatedUser.getId());
+            response.put("username", updatedUser.getUsername());
+            response.put("email", updatedUser.getEmail());
+            return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().header("message", e.getMessage()).build();
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        try {
+            userService.deleteUser(id);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 }
