@@ -39,6 +39,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/auth/**").permitAll() // Permite OPTIONS para CORS
                         .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/users/**").authenticated()
+                        .requestMatchers("/api/personagens/**").authenticated()
+                        .requestMatchers("/api/personagens/dnd/**").authenticated()
+                        .requestMatchers("/api/races/**").authenticated()
+                        .requestMatchers("/api/systems/**").authenticated()
+                        .requestMatchers("/api/classes/**").authenticated()
+                        .requestMatchers("/api/campaigns/**").authenticated()
                         .requestMatchers("/v3/**").permitAll() // Libera Swagger UI
                         .requestMatchers("/swagger-ui/**").permitAll() // Libera Swagger UI
                         .requestMatchers("/h2-console/**").permitAll() // Libera h2-console
