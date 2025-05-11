@@ -1,33 +1,44 @@
 package mythosforge.fable_minds.models;
 
-import org.hibernate.annotations.Comment;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "characters")
+@Table(name = "personagens")
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "sistema", discriminatorType = DiscriminatorType.STRING)
 @Data
-public class Character {
+public abstract class Character {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    @Comment("The name of the character")
-    @Size(min = 1, max = 50, message = "Character name must be between 1 and 50 characters long")
-    private String name;
-
-    @Column(length = 512)
-    @Comment("A short description of the character backstory")
-    private String background;
+    private String nome;
+    private String historia;
+    private Integer nivel;
+    private Integer xp;
 
     @ManyToOne
-    @JoinColumn(name = "campaign_id")
-    @Comment("The campaign this character belongs to")
-    @JsonBackReference                  // controla o “lado filho” da relação
-    private Campaign campaign;
+    @JoinColumn(name = "campaign_id", nullable = false)
+    private Campaign campanha;
+
+    @ManyToOne
+    @JoinColumn(name = "race_id", nullable = false)
+    private Race raca;
+
+    @ManyToOne
+    @JoinColumn(name = "class_id", nullable = false)
+    private CharacterClass characterClass;
 }

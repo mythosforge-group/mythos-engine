@@ -21,6 +21,14 @@ import mythosforge.fable_minds.models.ErrorResponse;
 import mythosforge.fable_minds.models.Users;
 import mythosforge.fable_minds.service.UserService;
 
+/* ENDPOINTS
+POST /api/users – registrar novo usuário
+GET /api/users/{id} – buscar usuário por ID
+GET /api/users – listar todos os usuários
+PUT /api/users/{id} – atualizar usuário
+DELETE /api/users/{id} – excluir usuário
+*/
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {

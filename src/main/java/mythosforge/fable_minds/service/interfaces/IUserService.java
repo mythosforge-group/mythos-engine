@@ -1,4 +1,4 @@
-package mythosforge.fable_minds.service;
+package mythosforge.fable_minds.service.interfaces;
 
 import mythosforge.fable_minds.config.security.auhentication.dto.UpdateUserDTO;
 import mythosforge.fable_minds.models.Users;

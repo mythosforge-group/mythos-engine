@@ -5,6 +5,7 @@ package mythosforge.fable_minds.service;
 import mythosforge.fable_minds.config.security.auhentication.dto.UpdateUserDTO;
 import mythosforge.fable_minds.models.Users;
 import mythosforge.fable_minds.repository.UserRepository;
+import mythosforge.fable_minds.service.interfaces.IUserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
