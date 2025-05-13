@@ -47,6 +47,7 @@ public class Campaign {
     @ManyToOne
     @JoinColumn(nullable = false, name = "system_id")
     @Comment("The game system this campaign is based on, e.g., D&D, Tormenta")
+    @JsonBackReference("system-campaigns")
     private System system;
 
     @OneToMany(mappedBy = "campanha", cascade = CascadeType.ALL, orphanRemoval = true)
