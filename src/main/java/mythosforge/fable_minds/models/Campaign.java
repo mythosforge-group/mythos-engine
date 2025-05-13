@@ -36,7 +36,7 @@ public class Campaign {
 
     @ManyToOne
     @JoinColumn(nullable = false, name = "user_id")
-    @JsonBackReference(value = "user-campaigns")
+    @JsonBackReference("user-campaigns")
     @Comment("The user who owns the campaign")
     private Users user;
 
@@ -46,12 +46,12 @@ public class Campaign {
 
     @ManyToOne
     @JoinColumn(nullable = false, name = "system_id")
-    @JsonBackReference(value = "system-campaigns")
+    @JsonBackReference("system-campaigns")
     @Comment("The game system this campaign is based on, e.g., D&D, Tormenta")
     private System system;
 
-    @OneToMany(mappedBy = "campaign", cascade = CascadeType.ALL)
-    @JsonManagedReference(value = "campaign-characters")
+    @OneToMany(mappedBy = "campanha", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("campaign-characters")
     @Comment("List of characters in the campaign")
     private List<Character> characters = new ArrayList<>();
 }

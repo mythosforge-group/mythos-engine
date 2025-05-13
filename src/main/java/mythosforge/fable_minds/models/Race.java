@@ -42,7 +42,7 @@ public class Race {
     @Comment("The game system this race belongs to")
     private System system;
 
-    @OneToMany(mappedBy = "race", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "raca", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("race-characters")
     @Comment("List of characters of this race")
     private List<Character> characters = new ArrayList<>();

@@ -47,7 +47,7 @@ public class CampaignService implements ICampaignService {
 
     @Override
     public List<Campaign> findByUserId(Long userId) {
-        return campaignRepository.findByOwnerId(userId);
+        return campaignRepository.findByUserId(userId);
     }
 
     @Override

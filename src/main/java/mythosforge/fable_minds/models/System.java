@@ -35,17 +35,17 @@ public class System {
     private String description;
 
     @OneToMany(mappedBy = "system", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference(value = "system-races")
+    @JsonManagedReference("system-races")
     @Comment("List of races defined by this system")
     private List<Race> races = new ArrayList<>();
 
     @OneToMany(mappedBy = "system", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference(value = "system-classes")
+    @JsonManagedReference("system-classes")
     @Comment("List of character classes defined by this system")
     private List<CharacterClass> classes = new ArrayList<>();
 
     @OneToMany(mappedBy = "system", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference(value = "system-campaigns")
+    @JsonManagedReference("system-campaigns")
     @Comment("List of campaigns under this system")
     private List<Campaign> campaigns = new ArrayList<>();
 }
