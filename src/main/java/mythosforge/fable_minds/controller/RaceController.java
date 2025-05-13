@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import mythosforge.fable_minds.config.security.auhentication.dto.RaceDTO;
 import mythosforge.fable_minds.models.Race;
 import mythosforge.fable_minds.service.RaceService;
 
@@ -37,18 +38,18 @@ public class RaceController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Race>> listAll() {
-        return ResponseEntity.ok(service.findAll());
+    public ResponseEntity<List<RaceDTO>> listAll() {
+        return ResponseEntity.ok(service.findAllDto());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Race> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.findById(id));
+    public ResponseEntity<RaceDTO> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.findByIdDto(id));
     }
 
     @GetMapping("/system/{systemId}")
-    public ResponseEntity<List<Race>> listBySystem(@PathVariable Long systemId) {
-        return ResponseEntity.ok(service.findBySystemId(systemId));
+    public ResponseEntity<List<RaceDTO>> listBySystem(@PathVariable Long systemId) {
+        return ResponseEntity.ok(service.findBySystemIdDto(systemId));
     }
 
     @PutMapping("/{id}")

@@ -1,13 +1,15 @@
 package mythosforge.fable_minds.service.interfaces;
 
 import java.util.List;
+
+import mythosforge.fable_minds.config.security.auhentication.dto.CharacterClassDTO;
 import mythosforge.fable_minds.models.CharacterClass;
 
 public interface ICharacterClassService {
     CharacterClass create(CharacterClass characterClass);
     CharacterClass update(Long id, CharacterClass characterClass);
-    CharacterClass findById(Long id);
-    List<CharacterClass> findAll();
-    List<CharacterClass> findBySystemId(Long systemId);
+    CharacterClassDTO findByIdDto(Long id);
+    List<CharacterClassDTO> findAllDto();
+    List<CharacterClassDTO> findBySystemIdDto(Long systemId);
     void delete(Long id);
 }

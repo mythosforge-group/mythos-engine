@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import mythosforge.fable_minds.config.security.auhentication.dto.CharacterClassDTO;
 import mythosforge.fable_minds.models.CharacterClass;
 import mythosforge.fable_minds.service.CharacterClassService;
 
@@ -32,30 +33,38 @@ public class CharacterClassController {
     }
 
     @PostMapping
-    public ResponseEntity<CharacterClass> create(@RequestBody CharacterClass characterClass) {
-        return ResponseEntity.ok(service.create(characterClass));
+    public ResponseEntity<CharacterClassDTO> create(@RequestBody CharacterClass characterClass) {
+        CharacterClass saved = service.create(characterClass);
+        CharacterClassDTO dto = new CharacterClassDTO(
+            saved.getId(), saved.getName(), saved.getDescription(), saved.getSystem().getId()
+        );
+        return ResponseEntity.ok(dto);
     }
 
     @GetMapping
-    public ResponseEntity<List<CharacterClass>> listAll() {
-        return ResponseEntity.ok(service.findAll());
+    public ResponseEntity<List<CharacterClassDTO>> listAll() {
+        return ResponseEntity.ok(service.findAllDto());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CharacterClass> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.findById(id));
+    public ResponseEntity<CharacterClassDTO> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.findByIdDto(id));
     }
 
     @GetMapping("/system/{systemId}")
-    public ResponseEntity<List<CharacterClass>> listBySystem(@PathVariable Long systemId) {
-        return ResponseEntity.ok(service.findBySystemId(systemId));
+    public ResponseEntity<List<CharacterClassDTO>> listBySystem(@PathVariable Long systemId) {
+        return ResponseEntity.ok(service.findBySystemIdDto(systemId));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CharacterClass> update(
+    public ResponseEntity<CharacterClassDTO> update(
             @PathVariable Long id,
             @RequestBody CharacterClass characterClass) {
-        return ResponseEntity.ok(service.update(id, characterClass));
+        CharacterClass updated = service.update(id, characterClass);
+        CharacterClassDTO dto = new CharacterClassDTO(
+            updated.getId(), updated.getName(), updated.getDescription(), updated.getSystem().getId()
+        );
+        return ResponseEntity.ok(dto);
     }
 
     @DeleteMapping("/{id}")

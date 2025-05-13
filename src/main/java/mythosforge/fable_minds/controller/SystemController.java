@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import mythosforge.fable_minds.config.security.auhentication.dto.SystemDTO;
 import mythosforge.fable_minds.models.System;
 import mythosforge.fable_minds.service.SystemService;
 
@@ -36,13 +37,13 @@ public class SystemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<System>> listAll() {
-        return ResponseEntity.ok(service.findAll());
+    public ResponseEntity<List<SystemDTO>> listAll() {
+        return ResponseEntity.ok(service.findAllDto());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<System> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.findById(id));
+    public ResponseEntity<SystemDTO> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.findByIdDto(id));
     }
 
     @PutMapping("/{id}")

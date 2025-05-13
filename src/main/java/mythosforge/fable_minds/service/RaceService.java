@@ -1,12 +1,14 @@
 package mythosforge.fable_minds.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import mythosforge.fable_minds.config.security.auhentication.dto.RaceDTO;
 import mythosforge.fable_minds.models.Race;
 import mythosforge.fable_minds.repository.RaceRepository;
 import mythosforge.fable_minds.service.RaceService;
@@ -39,22 +41,26 @@ public class RaceService implements IRaceService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Race findById(Long id) {
-        return raceRepository.findById(id)
+    public RaceDTO findByIdDto(Long id) {
+        Race r = raceRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Race not found: " + id));
+        return new RaceDTO(r.getId(), r.getName(), r.getDescription(), r.getSystem().getId());
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<Race> findAll() {
-        return raceRepository.findAll();
+    public List<RaceDTO> findAllDto() {
+        return raceRepository.findAll()
+            .stream()
+            .map(r -> new RaceDTO(r.getId(), r.getName(), r.getDescription(), r.getSystem().getId()))
+            .collect(Collectors.toList());
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<Race> findBySystemId(Long systemId) {
-        return raceRepository.findBySystemId(systemId);
+    public List<RaceDTO> findBySystemIdDto(Long systemId) {
+        return raceRepository.findBySystemId(systemId)
+            .stream()
+            .map(r -> new RaceDTO(r.getId(), r.getName(), r.getDescription(), r.getSystem().getId()))
+            .collect(Collectors.toList());
     }
 
     @Override

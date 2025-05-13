@@ -13,6 +13,7 @@ import java.util.Set;
 
 import org.hibernate.annotations.Comment;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -50,5 +51,6 @@ public class Users {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference("user-campaigns")
+    @JsonIgnore
     private List<Campaign> campaigns = new ArrayList<>();
 }

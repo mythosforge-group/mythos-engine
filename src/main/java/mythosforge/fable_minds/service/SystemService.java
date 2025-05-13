@@ -1,12 +1,14 @@
 package mythosforge.fable_minds.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import mythosforge.fable_minds.config.security.auhentication.dto.SystemDTO;
 import mythosforge.fable_minds.models.System;
 import mythosforge.fable_minds.repository.SystemRepository;
 import mythosforge.fable_minds.service.SystemService;
@@ -36,16 +38,18 @@ public class SystemService implements ISystemService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public System findById(Long id) {
-        return repo.findById(id)
+    public SystemDTO findByIdDto(Long id) {
+        System s = repo.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("System not found: " + id));
+        return new SystemDTO(s.getId(), s.getName(), s.getDescription());
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<System> findAll() {
-        return repo.findAll();
+    public List<SystemDTO> findAllDto() {
+        return repo.findAll()
+            .stream()
+            .map(s -> new SystemDTO(s.getId(), s.getName(), s.getDescription()))
+            .collect(Collectors.toList());
     }
 
     @Override

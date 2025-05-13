@@ -1,6 +1,7 @@
 package mythosforge.fable_minds.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,6 +22,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import mythosforge.fable_minds.config.security.auhentication.dto.CampaignDTO;
+import mythosforge.fable_minds.config.security.auhentication.dto.CampaignResponseDTO;
 import mythosforge.fable_minds.models.Campaign;
 import mythosforge.fable_minds.service.CampaignService;
 
@@ -48,13 +51,24 @@ public class CampaignController {
     }
 
     @PostMapping
-    public ResponseEntity<Campaign> create(@RequestBody Campaign campaign) {
-        return ResponseEntity.ok(campaignService.create(campaign));
+    public ResponseEntity<CampaignResponseDTO> create(@RequestBody Campaign campaign) {
+        Campaign saved = campaignService.create(campaign);
+        CampaignResponseDTO resp = new CampaignResponseDTO(
+            saved.getId(),
+            saved.getTitle(),
+            saved.getDescription(),
+            saved.getUser().getId(),
+            saved.getSystem().getId()
+        );
+        return ResponseEntity.ok(resp);
     }
 
     @GetMapping
-    public ResponseEntity<List<Campaign>> listAll() {
-        return ResponseEntity.ok(campaignService.findAll());
+    public List<CampaignDTO> listAll() {
+        return campaignService.findAll()
+            .stream()
+            .map(CampaignDTO::new)
+            .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")

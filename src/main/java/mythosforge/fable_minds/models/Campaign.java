@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.annotations.Comment;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
@@ -36,7 +37,6 @@ public class Campaign {
 
     @ManyToOne
     @JoinColumn(nullable = false, name = "user_id")
-    @JsonBackReference("user-campaigns")
     @Comment("The user who owns the campaign")
     private Users user;
 
@@ -46,12 +46,11 @@ public class Campaign {
 
     @ManyToOne
     @JoinColumn(nullable = false, name = "system_id")
-    @JsonBackReference("system-campaigns")
     @Comment("The game system this campaign is based on, e.g., D&D, Tormenta")
     private System system;
 
     @OneToMany(mappedBy = "campanha", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference("campaign-characters")
     @Comment("List of characters in the campaign")
+    @JsonIgnore 
     private List<Character> characters = new ArrayList<>();
 }
