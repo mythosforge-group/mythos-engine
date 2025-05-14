@@ -49,6 +49,12 @@ public class CharacterClassService implements ICharacterClassService {
             ))
             .collect(Collectors.toList());
     }
+    @Override
+    public CharacterClass findById(Long id) {
+        return characterClassRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("CharacterClass not found: " + id));
+    }
+
 
     @Override
     @Transactional(readOnly = true)

@@ -12,4 +12,5 @@ public interface IRaceService {
     List<RaceDTO> findAllDto();
     List<RaceDTO> findBySystemIdDto(Long systemId);
     void delete(Long id);
+    Race findById(Long id);
 }

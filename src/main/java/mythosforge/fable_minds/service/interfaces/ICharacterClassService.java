@@ -12,4 +12,6 @@ public interface ICharacterClassService {
     List<CharacterClassDTO> findAllDto();
     List<CharacterClassDTO> findBySystemIdDto(Long systemId);
     void delete(Long id);
+    CharacterClass findById(Long id);
+
 }

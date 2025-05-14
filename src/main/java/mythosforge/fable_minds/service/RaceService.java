@@ -41,6 +41,13 @@ public class RaceService implements IRaceService {
     }
 
     @Override
+    public Race findById(Long id) {
+        return raceRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Race not found: " + id));
+    }
+
+
+    @Override
     public RaceDTO findByIdDto(Long id) {
         Race r = raceRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Race not found: " + id));

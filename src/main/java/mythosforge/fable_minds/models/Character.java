@@ -2,19 +2,7 @@ package mythosforge.fable_minds.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.DiscriminatorColumn;
-import jakarta.persistence.DiscriminatorType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -28,9 +16,12 @@ public abstract class Character {
     private Long id;
 
     private String nome;
-    private String historia;
     private Integer nivel;
+
     private Integer xp;
+
+    @Column(columnDefinition = "TEXT")
+    private String historia;
 
     @ManyToOne
     @JoinColumn(name = "campaign_id", nullable = false)
