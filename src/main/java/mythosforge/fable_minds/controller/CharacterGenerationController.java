@@ -115,6 +115,7 @@ public class CharacterGenerationController {
         Gere um background criativo, incluindo nome, motivações, traumas, relações e possíveis objetivos futuros.
         Apresente em um texto bem estruturado, como se fosse o histórico da ficha de personagem.
         Comece com: Nome: <nome do personagem>
+        As classes,raça, sistema tem que ser exatamente as que foram definidas.
         """,
                 sistema.getName(),
                 campanha.getTitle(),
@@ -140,13 +141,10 @@ public class CharacterGenerationController {
         String conteudo = message.get("content");
 
         // Extrair nome do personagem
-        String nomeExtraido = "Personagem Sem Nome";
-        if (conteudo.startsWith("Nome:")) {
-            int fimDaLinha = conteudo.indexOf("\n");
-            nomeExtraido = conteudo.substring(6, fimDaLinha).trim();
-        }
+        String nomeExtraido = extrairNome(conteudo);
 
-        // Criar e salvar o personagem
+
+
         CharacterDnd novoPersonagem = new CharacterDnd();
         novoPersonagem.setNome(nomeExtraido);
         novoPersonagem.setHistoria(extrairHistoriaLimpa(conteudo));
@@ -169,7 +167,7 @@ public class CharacterGenerationController {
     }
 
     private int rolarAtributo() {
-        return 8 + (int)(Math.random() * 11); // 8 a 18
+        return 8 + (int)(Math.random() * 11);
     }
 
 
@@ -179,6 +177,25 @@ public class CharacterGenerationController {
             return respostaIA.substring(respostaIA.indexOf("</think>") + 8).trim();
         }
         return respostaIA.trim(); // caso não haja <think>
+    }
+
+    public static String extrairNome(String historia) {
+        for (String linha : historia.split("\n")) {
+            String linhaLimpa = linha.trim()
+                    .replace("**", "")  // remove marcação markdown
+                    .replace("*", "")   // caso venha só com um asterisco
+                    .replace(":", "")   // remove os dois-pontos para comparar com mais liberdade
+                    .toLowerCase();
+
+            if (linhaLimpa.startsWith("nome")) {
+
+                String[] partes = linha.split(":");
+                if (partes.length > 1) {
+                    return partes[1].replace("**", "").trim();
+                }
+            }
+        }
+        return "Personagem sem nome";
     }
 
 }
