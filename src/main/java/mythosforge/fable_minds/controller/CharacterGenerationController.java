@@ -22,180 +22,40 @@ import java.util.Map;
 @RequestMapping("/api/personagens/dnd")
 public class CharacterGenerationController {
 
-    private final CampaignService campaignService;
-    private final RaceService raceService;
-    private final CharacterClassService classService; // você deve ter um service para classes
-    private final SystemService systemService;
-
-    private final RestTemplate restTemplate = new RestTemplate();
-    private final String url = "http://localhost:1234/v1/chat/completions";
+    private final CharacterGenerationService campaignService;
     private final CharacterDndService characterDndService;
 
     public CharacterGenerationController(
-            CampaignService campaignService,
-            RaceService raceService,
-            CharacterClassService classService,
-            SystemService systemService,
+            CharacterGenerationService campaignService,
             CharacterDndService characterDndService
-
     ) {
         this.campaignService = campaignService;
-        this.raceService = raceService;
-        this.classService = classService;
-        this.systemService = systemService;
         this.characterDndService = characterDndService;
     }
 
     @PostMapping("/gerar")
-    public ResponseEntity<String> gerarFicha(@RequestParam Long campaignId,
-                                             @RequestParam Long raceId,
-                                             @RequestParam Long classId) {
+    public ResponseEntity<String> gerarFicha(
+            @RequestParam Long campaignId,
+            @RequestParam Long raceId,
+            @RequestParam Long classId
+    ) {
+        String historia = campaignService.gerarFicha(campaignId, raceId, classId);
+        return ResponseEntity.ok(historia);
+    }
 
-
-        Campaign campanha = campaignService.findById(campaignId);
-        RaceDTO raca = raceService.findByIdDto(raceId);
-        CharacterClassDTO clazz = classService.findByIdDto(classId); // Supondo que exista um model Class
-        SystemDTO sistema = systemService.findByIdDto(campanha.getSystem().getId());
-
-
-        String prompt = String.format("""
-            Gere a história de um personagem para um RPG.
-            O personagem pertence ao sistema: %s.
-            Ele faz parte da campanha chamada "%s", que possui o seguinte enredo: "%s".
-            O personagem é da raça: %s, e da classe: %s.
-            Gere um background criativo, incluindo nome, motivações, traumas, relações e possíveis objetivos futuros.
-            Apresente em um texto bem estruturado, como se fosse o histórico da ficha de personagem.
-            """,
-                sistema.getName(),
-                campanha.getTitle(),
-                campanha.getDescription(),
-                raca.getName(),
-                clazz.getName()
-        );
-
-        // Montar requisição para IA
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        Map<String, Object> payload = new HashMap<>();
-        payload.put("model", "local-model");
-        payload.put("messages", List.of(
-                Map.of("role", "user", "content", prompt)
-        ));
-
-        HttpEntity<Map<String, Object>> request = new HttpEntity<>(payload, headers);
-        ResponseEntity<Map> response = restTemplate.postForEntity(url, request, Map.class);
-
-        Map<String, Object> choice = ((List<Map<String, Object>>) response.getBody().get("choices")).get(0);
-        Map<String, String> message = (Map<String, String>) choice.get("message");
-
-        return ResponseEntity.ok(message.get("content"));
+    @PostMapping("/gerar-e-salvar")
+    public ResponseEntity<CharacterDnd> gerarFichaESalvar(
+            @RequestParam Long campaignId,
+            @RequestParam Long raceId,
+            @RequestParam Long classId
+    ) {
+        CharacterDnd personagem = campaignService.gerarFichaESalvar(campaignId, raceId, classId);
+        CharacterDnd salvo = characterDndService.create(personagem);
+        return ResponseEntity.ok(salvo);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<String> handleNotFound(EntityNotFoundException ex) {
         return ResponseEntity.status(404).body(ex.getMessage());
     }
-
-    @PostMapping("/gerar-e-salvar")
-    public ResponseEntity<CharacterDnd> gerarFichaESalvar(@RequestParam Long campaignId,
-                                                          @RequestParam Long raceId,
-                                                          @RequestParam Long classId) {
-
-        Campaign campanha = campaignService.findById(campaignId);
-        Race raca = raceService.findById(raceId); // Aqui retorna um objeto do tipo correto
-        CharacterClass characterClass = classService.findById(classId);
-        SystemDTO sistema = systemService.findByIdDto(campanha.getSystem().getId());
-
-        String prompt = String.format("""
-        Gere a história de um personagem para um RPG.
-        O personagem pertence ao sistema: %s.
-        Ele faz parte da campanha chamada "%s", que possui o seguinte enredo: "%s".
-        O personagem é da raça: %s, e da classe: %s.
-        Gere um background criativo, incluindo nome, motivações, traumas, relações e possíveis objetivos futuros.
-        Apresente em um texto bem estruturado, como se fosse o histórico da ficha de personagem.
-        Comece com: Nome: <nome do personagem>
-        As classes,raça, sistema tem que ser exatamente as que foram definidas.
-        """,
-                sistema.getName(),
-                campanha.getTitle(),
-                campanha.getDescription(),
-                raca.getName(),
-                characterClass.getName()
-        );
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        Map<String, Object> payload = new HashMap<>();
-        payload.put("model", "local-model");
-        payload.put("messages", List.of(
-                Map.of("role", "user", "content", prompt)
-        ));
-
-        HttpEntity<Map<String, Object>> request = new HttpEntity<>(payload, headers);
-        ResponseEntity<Map> response = restTemplate.postForEntity(url, request, Map.class);
-
-        Map<String, Object> choice = ((List<Map<String, Object>>) response.getBody().get("choices")).get(0);
-        Map<String, String> message = (Map<String, String>) choice.get("message");
-        String conteudo = message.get("content");
-
-        // Extrair nome do personagem
-        String nomeExtraido = extrairNome(conteudo);
-
-
-
-        CharacterDnd novoPersonagem = new CharacterDnd();
-        novoPersonagem.setNome(nomeExtraido);
-        novoPersonagem.setHistoria(extrairHistoriaLimpa(conteudo));
-        novoPersonagem.setNivel(1);
-        novoPersonagem.setXp(0);
-        novoPersonagem.setCampanha(campanha);
-        novoPersonagem.setRaca(raca);
-        novoPersonagem.setCharacterClass(characterClass);
-
-        // Atributos aleatórios entre 8 e 18 (padrão D&D)
-        novoPersonagem.setForca(rolarAtributo());
-        novoPersonagem.setDestreza(rolarAtributo());
-        novoPersonagem.setConstituicao(rolarAtributo());
-        novoPersonagem.setInteligencia(rolarAtributo());
-        novoPersonagem.setSabedoria(rolarAtributo());
-        novoPersonagem.setCarisma(rolarAtributo());
-
-        CharacterDnd personagemSalvo = characterDndService.create(novoPersonagem);
-        return ResponseEntity.ok(personagemSalvo);
-    }
-
-    private int rolarAtributo() {
-        return 8 + (int)(Math.random() * 11);
-    }
-
-
-
-    public String extrairHistoriaLimpa(String respostaIA) {
-        if (respostaIA.contains("</think>")) {
-            return respostaIA.substring(respostaIA.indexOf("</think>") + 8).trim();
-        }
-        return respostaIA.trim(); // caso não haja <think>
-    }
-
-    public static String extrairNome(String historia) {
-        for (String linha : historia.split("\n")) {
-            String linhaLimpa = linha.trim()
-                    .replace("**", "")  // remove marcação markdown
-                    .replace("*", "")   // caso venha só com um asterisco
-                    .replace(":", "")   // remove os dois-pontos para comparar com mais liberdade
-                    .toLowerCase();
-
-            if (linhaLimpa.startsWith("nome")) {
-
-                String[] partes = linha.split(":");
-                if (partes.length > 1) {
-                    return partes[1].replace("**", "").trim();
-                }
-            }
-        }
-        return "Personagem sem nome";
-    }
-
 }
