@@ -20,14 +20,17 @@ public class CharacterGenerationService implements ICharacterGenerationService {
     private final CharacterClassService classService;
     private final SystemService systemService;
     private final LlmClientService llmClient;
+    private final CharacterDndService characterDndService;
 
     public CharacterGenerationService(
             CampaignService campaignService,
             RaceService raceService,
             CharacterClassService classService,
             SystemService systemService,
-            LlmClientService llmClient
+            LlmClientService llmClient,
+            CharacterDndService characterDndService
     ) {
+        this.characterDndService = characterDndService;
         this.campaignService = campaignService;
         this.raceService = raceService;
         this.classService = classService;
@@ -83,6 +86,22 @@ public class CharacterGenerationService implements ICharacterGenerationService {
 
         return novoPersonagem;
     }
+
+
+    public String gerarLinhagem(Long characterId) {
+        CharacterDnd personagem = characterDndService.findById(characterId);
+
+
+        String prompt = PromptBuilder.buildFamilyTreePrompt(
+                personagem.getNome(),
+                personagem.getHistoria(),
+                personagem.getRaca().getName(),
+                personagem.getCharacterClass().getName()
+        );
+
+        return llmClient.request(prompt);
+    }
+
 
     private int rolarAtributo() {
         return 8 + (int)(Math.random() * 11);

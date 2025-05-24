@@ -52,4 +52,34 @@ public class PromptBuilder {
             className
         );
     }
+
+    public static String buildFamilyTreePrompt(String nome, String historia, String raca, String classe) {
+        return String.format("""
+        Gere uma árvore genealógica para o personagem de RPG abaixo:
+
+        Nome: %s
+        Raça: %s
+        Classe: %s
+        História: %s
+
+        Crie uma linhagem familiar com pelo menos 3 gerações: avós, pais e o personagem.
+        Dê nomes, ocupações, origens e eventos marcantes para cada membro da árvore genealógica.
+        Use uma estrutura clara, tipo:
+
+        - Avô Paterno: ...
+        - Avó Paterna: ...
+        - Pai: ...
+        - Mãe: ...
+        - [Personagem]: %s
+
+        A estrutura deve parecer parte de uma narrativa rica, mas organizada em árvore.
+        """,
+                nome,
+                raca,
+                classe,
+                historia,
+                nome
+        );
+    }
+
 }
