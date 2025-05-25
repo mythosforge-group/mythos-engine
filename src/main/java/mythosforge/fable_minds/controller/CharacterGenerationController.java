@@ -62,6 +62,8 @@ public class CharacterGenerationController {
     @PostMapping("/linhagem")
     public ResponseEntity<String> gerarArvoreGenealogica(@RequestParam Long characterId) {
         String linhagem = campaignService.gerarLinhagem(characterId);
+
+
         return ResponseEntity.ok(linhagem);
     }
 

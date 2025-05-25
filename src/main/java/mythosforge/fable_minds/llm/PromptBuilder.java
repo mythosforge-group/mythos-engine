@@ -55,24 +55,65 @@ public class PromptBuilder {
 
     public static String buildFamilyTreePrompt(String nome, String historia, String raca, String classe) {
         return String.format("""
-        Gere uma árvore genealógica para o personagem de RPG abaixo:
+        Gere uma árvore genealógica para o personagem de RPG abaixo com pelo menos 3 gerações: avós, pais e o personagem.
 
         Nome: %s
         Raça: %s
         Classe: %s
         História: %s
 
-        Crie uma linhagem familiar com pelo menos 3 gerações: avós, pais e o personagem.
-        Dê nomes, ocupações, origens e eventos marcantes para cada membro da árvore genealógica.
-        Use uma estrutura clara, tipo:
+        A resposta deve ser no seguinte formato JSON, com os dados aninhados conforme a árvore genealógica (nome, ocupação, origem e eventos marcantes):
 
-        - Avô Paterno: ...
-        - Avó Paterna: ...
-        - Pai: ...
-        - Mãe: ...
-        - [Personagem]: %s
+        {
+          "nome": "%s",
+          "ocupacao": "...",
+          "origem": "...",
+          "eventos": ["..."],
+          "pais": [
+            {
+              "nome": "...",
+              "ocupacao": "...",
+              "origem": "...",
+              "eventos": ["..."],
+              "pais": [
+                {
+                  "nome": "...",
+                  "ocupacao": "...",
+                  "origem": "...",
+                  "eventos": ["..."]
+                },
+                {
+                  "nome": "...",
+                  "ocupacao": "...",
+                  "origem": "...",
+                  "eventos": ["..."]
+                }
+              ]
+            },
+            {
+              "nome": "...",
+              "ocupacao": "...",
+              "origem": "...",
+              "eventos": ["..."],
+              "pais": [
+                {
+                  "nome": "...",
+                  "ocupacao": "...",
+                  "origem": "...",
+                  "eventos": ["..."]
+                },
+                {
+                  "nome": "...",
+                  "ocupacao": "...",
+                  "origem": "...",
+                  "eventos": ["..."]
+                }
+              ]
+            }
+          ]
+        }
 
-        A estrutura deve parecer parte de uma narrativa rica, mas organizada em árvore.
+        Utilize nomes criativos, coerentes com o universo de RPG. A saída **deve ser estritamente JSON válido**, sem explicações nem comentários.
         """,
                 nome,
                 raca,
@@ -81,5 +122,6 @@ public class PromptBuilder {
                 nome
         );
     }
+
 
 }

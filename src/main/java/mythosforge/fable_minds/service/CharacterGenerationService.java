@@ -1,5 +1,8 @@
 package mythosforge.fable_minds.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import mythosforge.fable_minds.config.security.auhentication.dto.CharacterClassDTO;
 import mythosforge.fable_minds.config.security.auhentication.dto.RaceDTO;
@@ -7,10 +10,15 @@ import mythosforge.fable_minds.config.security.auhentication.dto.SystemDTO;
 import mythosforge.fable_minds.llm.PromptBuilder;
 import mythosforge.fable_minds.llm.ResponseParser;
 import mythosforge.fable_minds.llm.LlmClientService;
+import mythosforge.fable_minds.llm.tree.ArvoreGenealogicaGenerator;
 import mythosforge.fable_minds.models.*;
 import mythosforge.fable_minds.service.interfaces.ICharacterGenerationService;
 
 import org.springframework.stereotype.Service;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
 @Service
 public class CharacterGenerationService implements ICharacterGenerationService {
@@ -98,8 +106,13 @@ public class CharacterGenerationService implements ICharacterGenerationService {
                 personagem.getRaca().getName(),
                 personagem.getCharacterClass().getName()
         );
+        String conteudo = llmClient.request(prompt);
 
-        return llmClient.request(prompt);
+        String respostaJson = ResponseParser.extrairHistoriaLimpa(conteudo);
+
+
+
+        return respostaJson;
     }
 
 
