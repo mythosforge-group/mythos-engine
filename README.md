@@ -70,39 +70,28 @@ fables-minds-api/
 ```
 ### Configure o banco de dados:
 
-O projeto utiliza por padrão um banco H2 in-memory, mas também pode usar PostgreSQL.
+O projeto utiliza por padrão um banco H2, também tem uma configuração para usar um banco de desenvolvimento PostGreSQL hospedado no [neon.tech](neon.tech) e terá uma configuração para usar um banco de dados Postgre local.
+ - Caso queira usar o banco de desenvolvimento hospedado na `neon`, use o perfil dev
+ - Caso queira usar o banco H2 use o perfil test
+ - Caso queria usar um banco local, use o perfil devlocal ⚠️(criar esse perfil)
 
-Para H2, nenhuma configuração adicional é necessária.
-
-Para usar PostgreSQL, [application.yaml](src\main\resources\application.yaml).
-
-Execute o projeto com Maven. Na pasta raiz do projeto, execute:
+Para executar o projeto no perfil que você quiser use o comando:
 
 ```bash
-./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+./mvnw spring-boot:run -Dspring-boot.run.profiles=perfil-desejado
 ```
+Ou mude o perfil ativo em [application.yaml](src\main\resources\application.yaml) para o perfil desejado e execute:
+```bash
+./mvnw spring-boot:run
+```
+
 Ou com sua IDE (IntelliJ, Eclipse, VSCode), executando a classe FablesMindsApplication.
 
 ### 🧩 Acessando o Banco de Dados H2 (in-memory)
-O H2 Database é carregado na memória em tempo de execução, útil para testes e desenvolvimento.
+O H2 Database é carregado na memória em tempo de execução. Caso você execute esse perfil você pode conectar usando um cliente de banco de dados SQL (como DBeaver ou MySQL Workbanch) e você pode ver as credenciais de acesso em [application-test.yaml](src\main\resources\application-test.yaml)
+Você também pode acessar via navegador com o link [http://localhost:8080/h2-console](http://localhost:8080/h2-console) (quando a aplicação estiver rodando).
 
-Acesso via navegador:
-Com a aplicação rodando, acesse:
-
-```bash
-http://localhost:8080/h2-console
-```
-Use as credenciais abaixo (ou veja em [application-dev.yaml](src\main\resources\application-dev.yaml)):
-
-- *JDBC URL:* jdbc:h2:mem:fabledb
-
-- *User Name:* root
-
-- *Password:*
-
-Clique em "Connect".
-
-⚠️ Por padrão, o console H2 só estará acessível se spring.h2.console.enabled=true estiver no application.yaml.
+⚠️ Por padrão, o console H2 só estará acessível se spring.h2.console.enabled=true estiver no application-test.yaml.
 
 ### 🛠️ Como usar outro banco (PostgreSQL, etc.)
 Para usar um banco PostgreSQL local:
@@ -112,7 +101,7 @@ Crie um banco:
 ```sql
 CREATE DATABASE fables_db;
 ```
-Atualize o arquivo application.yaml:
+Atualize o arquivo application-devlocal.yaml:
 ```yaml
 spring:
     datasource:
