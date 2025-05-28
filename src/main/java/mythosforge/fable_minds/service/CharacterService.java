@@ -1,15 +1,14 @@
 package mythosforge.fable_minds.service;
 
 import java.util.List;
-import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import mythosforge.fable_minds.models.Character;
 import mythosforge.fable_minds.repository.CharacterRepository;
-import mythosforge.fable_minds.service.CharacterService;
 import mythosforge.fable_minds.service.interfaces.ICharacterService;
+import mythosforge.fable_minds.exceptions.BusinessException;
 
 @Service
 @Transactional
@@ -29,7 +28,7 @@ public class CharacterService implements ICharacterService {
     @Override
     public Character update(Long id, Character character) {
         Character existing = characterRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Character não encontrado: " + id));
+                .orElseThrow(() -> new BusinessException("Personagem não encontrado: " + id));
         existing.setNome(character.getNome());
         existing.setHistoria(character.getHistoria());
         existing.setNivel(character.getNivel());
@@ -44,7 +43,7 @@ public class CharacterService implements ICharacterService {
     @Transactional(readOnly = true)
     public Character findById(Long id) {
         return characterRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Character não encontrado: " + id));
+                .orElseThrow(() -> new BusinessException("Personagem não encontrado: " + id));
     }
 
     @Override
@@ -56,7 +55,7 @@ public class CharacterService implements ICharacterService {
     @Override
     public void delete(Long id) {
         if (!characterRepository.existsById(id)) {
-            throw new EntityNotFoundException("Character não encontrado: " + id);
+            throw new BusinessException("Personagem não encontrado: " + id);
         }
         characterRepository.deleteById(id);
     }
