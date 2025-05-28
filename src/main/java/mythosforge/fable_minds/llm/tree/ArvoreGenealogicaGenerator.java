@@ -8,6 +8,7 @@ import mythosforge.fable_minds.models.Pessoa;
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static guru.nidi.graphviz.model.Factory.*;
 
@@ -23,8 +24,18 @@ public class ArvoreGenealogicaGenerator {
 
     private static void buildGraph(MutableGraph g, Pessoa pessoa, String paiId) {
         String id = UUID.randomUUID().toString();
-        String label = pessoa.getNome() + "\\n" + pessoa.getOcupacao() + "\\n" + pessoa.getOrigem();
-        g.add(mutNode(id).add(Label.html(label)));
+
+        Label label = Label.lines(
+                pessoa.getNome(),
+                "Ocupação: " + pessoa.getOcupacao(),
+                "Origem: " + pessoa.getOrigem(),
+                pessoa.getEventos() != null && !pessoa.getEventos().isEmpty()
+                        ? "Eventos:\n" + pessoa.getEventos().stream()
+                        .map(e -> " - " + e)
+                        .collect(Collectors.joining("\n"))
+                        : null
+        );
+        g.add(mutNode(id).add(label));
 
         if (paiId != null) {
             g.add(mutNode(paiId).addLink(mutNode(id)));
@@ -37,4 +48,5 @@ public class ArvoreGenealogicaGenerator {
         }
     }
 }
+
 

@@ -1,12 +1,18 @@
 package mythosforge.fable_minds.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
+import mythosforge.fable_minds.llm.tree.ArvoreGenealogicaGenerator;
 import mythosforge.fable_minds.models.*;
 import mythosforge.fable_minds.service.*;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
 import java.lang.System;
+import java.nio.file.Files;
 
 @RestController
 @RequestMapping("/api/personagens/dnd")
@@ -61,16 +67,42 @@ public class CharacterGenerationController {
     }
 
     @GetMapping("/linhagem")
-    public ResponseEntity<String> buscarEstruturaSalva(@RequestParam Long id) {
-        String json = arvoreGenealogicaService.buscarEstruturaPorPersonagem(id);
+    public ResponseEntity<String> buscarEstruturaSalva(@RequestParam Long characterId) {
+        String json = arvoreGenealogicaService.buscarEstruturaPorPersonagem(characterId);
 
         return ResponseEntity.ok(json);
     }
+
+
+
+        @PostMapping("/linhagem/gerar-imagem")
+        public ResponseEntity<byte[]> gerarGenealogia(@RequestParam Long characterId) throws Exception {
+            String respostaJson = arvoreGenealogicaService.buscarEstruturaPorPersonagem(characterId);
+
+            respostaJson = respostaJson
+                    .replaceAll("(?s)^```json\\s*", "")  // remove início com ```json
+                    .replaceAll("(?s)```\\s*$", "");     // remove final com ```
+            ;
+
+            ObjectMapper mapper = new ObjectMapper();
+
+            Pessoa arvore = mapper.readValue(respostaJson, Pessoa.class);
+
+            String outputPath = "/tmp/arvore.png";
+            ArvoreGenealogicaGenerator.gerarImagemArvore(arvore, outputPath);
+
+
+            File file = new File(outputPath);
+            byte[] imagemBytes = Files.readAllBytes(file.toPath());
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_PNG)
+                    .body(imagemBytes);
+        }
 
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<String> handleNotFound(EntityNotFoundException ex) {
         return ResponseEntity.status(404).body(ex.getMessage());
     }
-
 }
