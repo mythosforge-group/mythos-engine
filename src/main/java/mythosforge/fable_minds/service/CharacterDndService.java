@@ -1,14 +1,13 @@
 package mythosforge.fable_minds.service;
 
 import java.util.List;
-import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import mythosforge.fable_minds.exceptions.BusinessException;
 import mythosforge.fable_minds.models.CharacterDnd;
 import mythosforge.fable_minds.repository.CharacterDndRepository;
-import mythosforge.fable_minds.service.CharacterDndService;
 import mythosforge.fable_minds.service.interfaces.ICharacterDndService;
 
 @Service
@@ -22,27 +21,27 @@ public class CharacterDndService implements ICharacterDndService {
     }
 
     @Override
-    public CharacterDnd create(CharacterDnd Character) {
-        return characterDndRepository.save(Character);
+    public CharacterDnd create(CharacterDnd character) {
+        return characterDndRepository.save(character);
     }
 
     @Override
-    public CharacterDnd update(Long id, CharacterDnd Character) {
+    public CharacterDnd update(Long id, CharacterDnd character) {
         CharacterDnd existing = characterDndRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Character DnD não encontrado: " + id));
-        existing.setNome(Character.getNome());
-        existing.setHistoria(Character.getHistoria());
-        existing.setNivel(Character.getNivel());
-        existing.setXp(Character.getXp());
-        existing.setCampanha(Character.getCampanha());
-        existing.setRaca(Character.getRaca());
-        existing.setCharacterClass(Character.getCharacterClass());
-        existing.setForca(Character.getForca());
-        existing.setDestreza(Character.getDestreza());
-        existing.setConstituicao(Character.getConstituicao());
-        existing.setInteligencia(Character.getInteligencia());
-        existing.setSabedoria(Character.getSabedoria());
-        existing.setCarisma(Character.getCarisma());
+                .orElseThrow(() -> new BusinessException("Personagem DnD não encontrado: " + id));
+        existing.setNome(character.getNome());
+        existing.setHistoria(character.getHistoria());
+        existing.setNivel(character.getNivel());
+        existing.setXp(character.getXp());
+        existing.setCampanha(character.getCampanha());
+        existing.setRaca(character.getRaca());
+        existing.setCharacterClass(character.getCharacterClass());
+        existing.setForca(character.getForca());
+        existing.setDestreza(character.getDestreza());
+        existing.setConstituicao(character.getConstituicao());
+        existing.setInteligencia(character.getInteligencia());
+        existing.setSabedoria(character.getSabedoria());
+        existing.setCarisma(character.getCarisma());
         return characterDndRepository.save(existing);
     }
 
@@ -50,7 +49,7 @@ public class CharacterDndService implements ICharacterDndService {
     @Transactional(readOnly = true)
     public CharacterDnd findById(Long id) {
         return characterDndRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Character DnD não encontrado: " + id));
+                .orElseThrow(() -> new BusinessException("Personagem DnD não encontrado: " + id));
     }
 
     @Override
@@ -62,7 +61,7 @@ public class CharacterDndService implements ICharacterDndService {
     @Override
     public void delete(Long id) {
         if (!characterDndRepository.existsById(id)) {
-            throw new EntityNotFoundException("Character DnD não encontrado: " + id);
+            throw new BusinessException("Personagem DnD não encontrado: " + id);
         }
         characterDndRepository.deleteById(id);
     }

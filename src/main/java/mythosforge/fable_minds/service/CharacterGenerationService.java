@@ -1,24 +1,15 @@
 package mythosforge.fable_minds.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.persistence.EntityNotFoundException;
 import mythosforge.fable_minds.config.security.auhentication.dto.CharacterClassDTO;
 import mythosforge.fable_minds.config.security.auhentication.dto.RaceDTO;
 import mythosforge.fable_minds.config.security.auhentication.dto.SystemDTO;
 import mythosforge.fable_minds.llm.PromptBuilder;
 import mythosforge.fable_minds.llm.ResponseParser;
 import mythosforge.fable_minds.llm.LlmClientService;
-import mythosforge.fable_minds.llm.tree.ArvoreGenealogicaGenerator;
 import mythosforge.fable_minds.models.*;
 import mythosforge.fable_minds.service.interfaces.ICharacterGenerationService;
 
 import org.springframework.stereotype.Service;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 
 @Service
 public class CharacterGenerationService implements ICharacterGenerationService {
@@ -54,7 +45,7 @@ public class CharacterGenerationService implements ICharacterGenerationService {
         SystemDTO sistema = systemService.findByIdDto(campanha.getSystem().getId());
 
         String prompt = PromptBuilder.buildBasicPrompt(
-            sistema, campanha, raca.getName(), clazz.getName()
+                sistema, campanha, raca.getName(), clazz.getName()
         );
         return llmClient.request(prompt);
     }
@@ -67,10 +58,10 @@ public class CharacterGenerationService implements ICharacterGenerationService {
         SystemDTO sistema = systemService.findByIdDto(campanha.getSystem().getId());
 
         String prompt  = PromptBuilder.buildNamedPrompt(
-            sistema,
-            campanha,
-            racaModel.getName(),
-            characterClass.getName()
+                sistema,
+                campanha,
+                racaModel.getName(),
+                characterClass.getName()
         );
         String conteudo = llmClient.request(prompt);
 
@@ -95,10 +86,9 @@ public class CharacterGenerationService implements ICharacterGenerationService {
         return novoPersonagem;
     }
 
-
+    @Override
     public String gerarLinhagem(Long characterId) {
         CharacterDnd personagem = characterDndService.findById(characterId);
-
 
         String prompt = PromptBuilder.buildFamilyTreePrompt(
                 personagem.getNome(),
@@ -110,11 +100,8 @@ public class CharacterGenerationService implements ICharacterGenerationService {
 
         String respostaJson = ResponseParser.extrairHistoriaLimpa(conteudo);
 
-
-
         return respostaJson;
     }
-
 
     private int rolarAtributo() {
         return 8 + (int)(Math.random() * 11);

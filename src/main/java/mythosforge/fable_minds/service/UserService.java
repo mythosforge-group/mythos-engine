@@ -3,6 +3,7 @@ package mythosforge.fable_minds.service;
 
 
 import mythosforge.fable_minds.config.security.auhentication.dto.UpdateUserDTO;
+import mythosforge.fable_minds.exceptions.BusinessException;
 import mythosforge.fable_minds.models.Users;
 import mythosforge.fable_minds.repository.UserRepository;
 import mythosforge.fable_minds.service.interfaces.IUserService;
@@ -30,10 +31,10 @@ public class UserService implements IUserService {
         @Override
         public Users createUser(Users user) {
             if (userRepository.existsByUsername(user.getUsername())) {
-                throw new RuntimeException("Nome de usuário já está em uso");
+                throw new BusinessException("Nome de usuário já está em uso");
             }
             if (userRepository.existsByEmail(user.getEmail())) {
-                throw new RuntimeException("E-mail já está em uso");
+                throw new BusinessException("E-mail já está em uso");
             }
             user.setPassword(passwordEncoder.encode(user.getPassword())); // Codifica a senha
             return userRepository.save(user);
@@ -60,13 +61,13 @@ public class UserService implements IUserService {
                 }
 
                 return userRepository.save(user);
-            }).orElseThrow(() -> new RuntimeException("Usuário não encontrado com id: " + id));
+            }).orElseThrow(() -> new BusinessException("Usuário não encontrado com id: " + id));
         }
 
         @Override
         public void deleteUser(Long id) {
             if (!userRepository.existsById(id)) {
-                throw new RuntimeException("Usuário com ID " + id + " não encontrado.");
+                throw new BusinessException("Usuário com ID " + id + " não encontrado.");
             }
             userRepository.deleteById(id);
         }

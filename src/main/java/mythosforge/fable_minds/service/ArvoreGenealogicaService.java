@@ -1,5 +1,6 @@
 package mythosforge.fable_minds.service;
 
+import mythosforge.fable_minds.exceptions.BusinessException;
 import mythosforge.fable_minds.models.ArvoreGenealogica;
 import mythosforge.fable_minds.repository.ArvoreGenealogicaRepository;
 import mythosforge.fable_minds.service.interfaces.ArvoreGenealogicaInterface;
@@ -17,6 +18,9 @@ public class ArvoreGenealogicaService implements ArvoreGenealogicaInterface {
 
     @Transactional
     public void salvarEstruturaGenealogica(Long personagemId, String jsonEstrutura) {
+        if (personagemId == null || jsonEstrutura == null || jsonEstrutura.isBlank()) {
+            throw new BusinessException("Dados inválidos para salvar árvore genealógica.");
+        }
 
         ArvoreGenealogica arvore = ArvoreGenealogica.builder()
                 .personagemId(personagemId)
@@ -29,7 +33,6 @@ public class ArvoreGenealogicaService implements ArvoreGenealogicaInterface {
     public String buscarEstruturaPorPersonagem(Long personagemId) {
         return repository.findByPersonagemId(personagemId)
                 .map(ArvoreGenealogica::getEstruturaJson)
-                .orElse(null);
+                .orElseThrow(() -> new BusinessException("Estrutura genealógica não encontrada para o personagem com ID: " + personagemId));
     }
 }
-
