@@ -1,5 +1,6 @@
 package mythosforge.fable_minds.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import mythosforge.fable_minds.exceptions.BusinessException;
 import mythosforge.fable_minds.models.ArvoreGenealogica;
 import mythosforge.fable_minds.repository.ArvoreGenealogicaRepository;
@@ -35,4 +36,13 @@ public class ArvoreGenealogicaService implements ArvoreGenealogicaInterface {
                 .map(ArvoreGenealogica::getEstruturaJson)
                 .orElseThrow(() -> new BusinessException("Estrutura genealógica não encontrada para o personagem com ID: " + personagemId));
     }
+
+    public void salvarImagem(Long personagemId, byte[] imagemBytes) {
+        ArvoreGenealogica arvore = repository.findByPersonagemId(personagemId)
+                .orElseThrow(() -> new BusinessException("Árvore não encontrada"));
+
+        arvore.setImagemArvore(imagemBytes);
+        repository.save(arvore);
+    }
+
 }

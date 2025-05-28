@@ -94,6 +94,7 @@ public class CharacterGenerationController {
 
             File file = new File(outputPath);
             byte[] imagemBytes = Files.readAllBytes(file.toPath());
+            arvoreGenealogicaService.salvarImagem(characterId, imagemBytes);
 
             return ResponseEntity.ok()
                     .contentType(MediaType.IMAGE_PNG)
