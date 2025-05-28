@@ -1,11 +1,15 @@
 package mythosforge.fable_minds.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,11 +20,21 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import mythosforge.fable_minds.config.security.auhentication.dto.CampaignDTO;
+import mythosforge.fable_minds.config.security.auhentication.dto.CampaignResponseDTO;
 import mythosforge.fable_minds.models.Campaign;
 import mythosforge.fable_minds.service.CampaignService;
 
-
+/* ENDPOINTS
+POST /api/campaigns – criar nova campanha
+GET /api/campaigns – listar todas as campanhas
+GET /api/campaigns/{id} – buscar campanha por ID
+GET /api/campaigns/user/{userId} – listar campanhas de um usuário
+PUT /api/campaigns/{id} – atualizar campanha
+DELETE /api/campaigns/{id} – excluir campanha
+*/
 
 @RestController
 @RequestMapping("/api/campaigns")
@@ -36,50 +50,50 @@ public class CampaignController {
         this.campaignService = campaignService;
     }
 
-    @Operation(
-        summary = "Criar nova campanha",
-        description = "Cria uma nova campanha associada a um usuário existente."
-    )
-    @ApiResponses(value = {
-        @ApiResponse(
-            responseCode = "200", 
-            description = "Campanha criada com sucesso",
-            content = @Content(
-                mediaType = "application/json", 
-                schema = @Schema(implementation = Campaign.class)
-            )
-        ),
-        @ApiResponse(
-            responseCode = "400", 
-            description = "Requisição inválida", 
-            content = @Content
-        )
-    })
     @PostMapping
-    public ResponseEntity<Campaign> createCampaign(@RequestBody Campaign campaign) {
-        return ResponseEntity.ok(campaignService.createCampaign(campaign));
+    public ResponseEntity<CampaignResponseDTO> create(@RequestBody Campaign campaign) {
+        Campaign saved = campaignService.create(campaign);
+        CampaignResponseDTO resp = new CampaignResponseDTO(
+            saved.getId(),
+            saved.getTitle(),
+            saved.getDescription(),
+            saved.getUser().getId(),
+            saved.getSystem().getId()
+        );
+        return ResponseEntity.ok(resp);
     }
-    @Operation(
-        summary = "Listar campanhas de um usuário",
-        description = "Retorna todas as campanhas criadas por um usuário específico através de seu ID."
-    )
-    @ApiResponses(value = {
-        @ApiResponse(
-            responseCode = "200", 
-            description = "Campanhas retornadas com sucesso",
-            content = @Content(
-                mediaType = "application/json", 
-                schema = @Schema(implementation = Campaign.class)
-            )
-        ),
-        @ApiResponse(
-            responseCode = "404", 
-            description = "Usuário não encontrado", 
-            content = @Content
-        )
-    })
+
+    @GetMapping
+    public List<CampaignDTO> listAll() {
+        return campaignService.findAll()
+            .stream()
+            .map(CampaignDTO::new)
+            .collect(Collectors.toList());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Campaign> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(campaignService.findById(id));
+    }
+
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Campaign>> getUserCampaigns(@PathVariable Long userId) {
-        return ResponseEntity.ok(campaignService.getCampaignsByUserId(userId));
+    public ResponseEntity<List<Campaign>> listByUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(campaignService.findByUserId(userId));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Campaign> update(@PathVariable Long id, @RequestBody Campaign campaign) {
+        return ResponseEntity.ok(campaignService.update(id, campaign));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        campaignService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<String> handleNotFound(EntityNotFoundException ex) {
+        return ResponseEntity.status(404).body(ex.getMessage());
     }
 }

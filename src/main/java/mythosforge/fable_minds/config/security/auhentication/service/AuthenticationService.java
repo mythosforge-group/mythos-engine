@@ -40,4 +40,14 @@ public class AuthenticationService {
         // Gera um JWT
         return jwtService.generateToken(user);
     }
+
+    public Users getUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+            .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+    }
+
+    public Users getUserById(Long id) {
+        return userRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+    }
 }

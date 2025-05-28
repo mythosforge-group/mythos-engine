@@ -1,33 +1,40 @@
 package mythosforge.fable_minds.models;
 
-import org.hibernate.annotations.Comment;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Entity
-@Table(name = "characters")
+@Table(name = "character")
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "sistema", discriminatorType = DiscriminatorType.STRING)
 @Data
-public class Character {
+public abstract class Character {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    @Comment("The name of the character")
-    @Size(min = 1, max = 50, message = "Character name must be between 1 and 50 characters long")
-    private String name;
+    private String nome;
+    private Integer nivel;
 
-    @Column(length = 512)
-    @Comment("A short description of the character backstory")
-    private String background;
+    private Integer xp;
+
+    @Column(columnDefinition = "TEXT")
+    private String historia;
 
     @ManyToOne
-    @JoinColumn(name = "campaign_id")
-    @Comment("The campaign this character belongs to")
-    @JsonBackReference                  // controla o “lado filho” da relação
-    private Campaign campaign;
+    @JoinColumn(name = "campaign_id", nullable = false)
+    @JsonBackReference("campaign-characters")
+    private Campaign campanha;
+
+    @ManyToOne
+    @JoinColumn(name = "race_id", nullable = false)
+    @JsonBackReference("race-characters")
+    private Race raca;
+
+    @ManyToOne
+    @JoinColumn(name = "class_id", nullable = false)
+    @JsonBackReference("class-characters")
+    private CharacterClass characterClass;
 }

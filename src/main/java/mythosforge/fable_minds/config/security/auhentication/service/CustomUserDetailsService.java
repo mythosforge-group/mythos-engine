@@ -34,4 +34,19 @@ public class CustomUserDetailsService implements UserDetailsService {
             authorities
         );
     }
+
+    public UserDetails loadUserById(Long id) throws UsernameNotFoundException {
+        Users user = userRepository.findById(id)
+            .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com id: " + id));
+    
+        List<GrantedAuthority> authorities = user.getRoles().stream()
+            .map(role -> new SimpleGrantedAuthority(role.getName()))
+            .collect(Collectors.toList());
+    
+        return new org.springframework.security.core.userdetails.User(
+            user.getUsername(),
+            user.getPassword(),
+            authorities
+        );
+    }
 }
