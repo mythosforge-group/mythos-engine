@@ -25,16 +25,17 @@ public class ArvoreGenealogicaGenerator {
     private static void buildGraph(MutableGraph g, Pessoa pessoa, String paiId) {
         String id = UUID.randomUUID().toString();
 
-        Label label = Label.lines(
-                pessoa.getNome(),
-                "Ocupação: " + pessoa.getOcupacao(),
-                "Origem: " + pessoa.getOrigem(),
-                pessoa.getEventos() != null && !pessoa.getEventos().isEmpty()
-                        ? "Eventos:\n" + pessoa.getEventos().stream()
-                        .map(e -> " - " + e)
-                        .collect(Collectors.joining("\n"))
-                        : null
+        Label label = Label.html(
+                "<b>" + pessoa.getNome() + "</b><br/>" +
+                        "<i>Ocupação:</i> " + pessoa.getOcupacao() + "<br/>" +
+                        "<i>Origem:</i> " + pessoa.getOrigem() + "<br/>" +
+                        (pessoa.getEventos() != null && !pessoa.getEventos().isEmpty()
+                                ? "<i>Eventos:</i><br/>" + pessoa.getEventos().stream()
+                                .map(e -> "&#8226; " + e)  // bullet point
+                                .collect(Collectors.joining("<br/>"))
+                                : "")
         );
+
         g.add(mutNode(id).add(label));
 
         if (paiId != null) {
