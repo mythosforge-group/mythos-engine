@@ -41,6 +41,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/users/**").authenticated()
                         .requestMatchers("/api/personagens/**").authenticated()
                         .requestMatchers("/api/personagens/dnd/**").authenticated()
+                        .requestMatchers("/api/personagens/dnd/npc/**").authenticated()
                         .requestMatchers("/api/races/**").authenticated()
                         .requestMatchers("/api/systems/**").authenticated()
                         .requestMatchers("/api/classes/**").authenticated()

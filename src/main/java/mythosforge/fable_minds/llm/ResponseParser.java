@@ -26,4 +26,8 @@ public class ResponseParser {
         }
         return "Personagem sem nome";
     }
+
+    public static String extrairNpcResponse(String raw) {
+        return raw.trim();
+    }
 }
