@@ -1,9 +1,14 @@
 package mythosforge.fable_minds.llm;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import mythosforge.fable_minds.config.security.auhentication.dto.CharacterClassDTO;
 import mythosforge.fable_minds.config.security.auhentication.dto.RaceDTO;
 import mythosforge.fable_minds.config.security.auhentication.dto.SystemDTO;
 import mythosforge.fable_minds.models.Campaign;
+import mythosforge.fable_minds.models.NpcMessage;
 
 public class PromptBuilder {
 
@@ -123,5 +128,36 @@ public class PromptBuilder {
         );
     }
 
+    public static String buildSystemPrompt(String npcName, String descricao) {
+        return String.format(
+            "Interprete um personagem de RPG chamado %s.\n" +
+            "Descrição do personagem: %s.\n\n" +
+            "Você deve responder **apenas** com a fala do NPC, sem nenhum prefixo (ex: não escreva “%s:” na frente) nem repetir o histórico.\n" +
+            "Responda de forma breve, natural e coerente com seu personagem. " +
+            "Nunca peça desculpas, nunca recuse a conversa, e não repita saudações.",
+            npcName,
+            descricao,
+            npcName
+        );
+    }
 
+   public static String buildUserPrompt(String npcName, List<NpcMessage> history, String userContent) {
+        StringBuilder prompt = new StringBuilder();
+        prompt.append("Histórico da conversa:\n");
+
+        List<NpcMessage> lastMessages = history.stream()
+            .sorted(Comparator.comparing(NpcMessage::getTimestamp).reversed())
+            .limit(9)
+            .sorted(Comparator.comparing(NpcMessage::getTimestamp))
+            .collect(Collectors.toList());
+
+        for (NpcMessage msg : lastMessages) {
+            String autor = msg.getRole().equals("user") ? "Jogador" : npcName;
+            prompt.append(String.format("%s: %s\n", autor, msg.getContent()));
+        }
+
+        prompt.append("Jogador: ").append(userContent).append("\n");
+        prompt.append(npcName).append(":");
+        return prompt.toString();
+    }
 }
