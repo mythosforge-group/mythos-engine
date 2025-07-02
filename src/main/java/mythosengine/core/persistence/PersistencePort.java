@@ -7,4 +7,5 @@ import java.util.UUID;
 public interface PersistencePort {
     void save(Entity entity);
     Optional<Entity> findById(UUID entityId);
+    void deleteById(UUID entityId);
 }
