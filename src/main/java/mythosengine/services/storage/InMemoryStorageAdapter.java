@@ -33,4 +33,10 @@ public class InMemoryStorageAdapter implements PersistencePort {
         System.out.println("STORAGE(InMemory): Retornando snapshot de todas as " + database.size() + " entidades.");
         return database.values();
     }
+
+    @Override
+    public void deleteById(UUID entityId) {
+        System.out.println("STORAGE(InMemory): Deletando entidade " + entityId);
+        database.remove(entityId);
+    }
 }

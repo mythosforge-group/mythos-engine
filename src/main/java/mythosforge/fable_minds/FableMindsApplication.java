@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(scanBasePackages = {
     "mythosforge.fable_minds",
-    "mythosengine.core"
+    "mythosengine"
 })
 
 public class FableMindsApplication {
