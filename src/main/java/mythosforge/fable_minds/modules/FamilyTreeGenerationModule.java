@@ -38,15 +38,15 @@ public class FamilyTreeGenerationModule implements IContentGeneratorModule {
 
     @Override
     public GeneratedContent generate(ContentGenerationContext context) {
-        // 1. Extrair o personagem da APLICAÇÃO do contexto
+
         CharacterDnd personagemPrincipalApp = (CharacterDnd) context.getParameters().get("character");
 
-        // --- INÍCIO DA CORREÇÃO ---
+
 
         // 2. Usar o ID da "ponte" para carregar a ENTIDADE do FRAMEWORK correspondente
-        UUID entityId = personagemPrincipalApp.getEntityId(); // Este método agora existe graças à refatoração anterior
+        UUID entityId = personagemPrincipalApp.getEntityId();
 
-        // Verificamos se o ID não é nulo para evitar erros
+
         if (entityId == null) {
             throw new IllegalStateException("O CharacterDnd com ID " + personagemPrincipalApp.getId() + " não possui um entityId do framework vinculado.");
         }
@@ -59,7 +59,7 @@ public class FamilyTreeGenerationModule implements IContentGeneratorModule {
         // --- FIM DA CORREÇÃO ---
 
 
-        // 3. Chamar a LLM para obter o JSON da linhagem (sua lógica existente)
+
         String prompt = PromptBuilder.buildFamilyTreePrompt(
                 personagemPrincipalApp.getNome(),
                 personagemPrincipalApp.getHistoria(),
@@ -100,7 +100,7 @@ public class FamilyTreeGenerationModule implements IContentGeneratorModule {
         }
 
         for (Pessoa paiPessoa : pessoa.getPais()) {
-            // Cria uma nova entidade para o pai
+
             Entity paiEntity = new Entity("Personagem_Linhagem");
             paiEntity.addProperty("nome", paiPessoa.getNome());
             paiEntity.addProperty("ocupacao", paiPessoa.getOcupacao());

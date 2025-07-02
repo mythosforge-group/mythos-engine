@@ -13,7 +13,6 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
-@Primary
 public class InMemoryStorageAdapter implements PersistencePort {
     private final Map<UUID, Entity> database = new ConcurrentHashMap<>();
 

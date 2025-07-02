@@ -36,6 +36,7 @@ public class CharacterGenerationController {
 
     private final LineageService lineageService ;
     private final GraphVisualizer graphVisualizer;
+    private final ArvoreGenealogicaService arvoreGenealogicaService;
 
     public CharacterGenerationController(
         CharacterGenerationService characterGenerationService,
@@ -45,7 +46,8 @@ public class CharacterGenerationController {
         RaceService raceService,
         CampaignService campaignService,
         LineageService lineageService,
-        GraphVisualizer graphVisualizer
+        GraphVisualizer graphVisualizer,
+        ArvoreGenealogicaService arvoreGenealogicaService
 
     ) {
         this.characterGenerationService = characterGenerationService;
@@ -56,6 +58,7 @@ public class CharacterGenerationController {
         this.generationEngine = generationEngine;
         this.lineageService = lineageService;
         this.graphVisualizer = graphVisualizer;
+        this.arvoreGenealogicaService = arvoreGenealogicaService;
     }
 
     @PostMapping("/gerar")
@@ -74,7 +77,7 @@ public class CharacterGenerationController {
             @RequestParam Long raceId,
             @RequestParam Long classId
     ) {
-        // 1. Montar o contexto
+        // Montar o contexto
         Campaign campaign = campaignService.findById(campaignId);
         Race race = raceService.findById(raceId);
         CharacterClass characterClass = classService.findById(classId);
@@ -89,15 +92,15 @@ public class CharacterGenerationController {
                 .parameters(params)
                 .build();
 
-        // 2. Chamar o motor do framework
+        //Chamar o motor do framework
         GeneratedContent resultado = generationEngine.process(context);
 
-        // 3. Usar o resultado para criar e salvar o personagem
+        //Usar o resultado para criar e salvar o personagem
         CharacterDnd personagem = new CharacterDnd();
         personagem.setHistoria(resultado.getMainText());
         personagem.setNome((String) resultado.getMetadata().get("nome"));
 
-        // Preenchendo os campos restantes
+
         personagem.setNivel(1);
         personagem.setXp(0);
         personagem.setCampanha(campaign);
@@ -140,19 +143,14 @@ public class CharacterGenerationController {
         return ResponseEntity.ok(resultado.getMainText() + " " + resultado.getCreatedEntities().size() + " novas entidades foram criadas.");
     }
 
-    /**
-     * Endpoint para gerar uma imagem da árvore genealógica de um personagem.
-     * Substitui o antigo POST /linhagem/gerar-imagem.
-     */
+
     @GetMapping("/{characterId}/linhagem-imagem")
     public ResponseEntity<byte[]> gerarImagemGenealogia(@PathVariable Long characterId) throws Exception {
-        // 1. Encontrar a Entidade do framework correspondente ao personagem da aplicação.
-        //    (NOTA: Em um sistema real, você teria um mapeamento entre o ID da aplicação e o ID da entidade).
-        //    Para este exemplo, vamos assumir que o characterDndService pode nos dar o UUID da entidade.
+
         UUID entityId = characterDndService.findById(characterId).getEntityId();
 
-        // 2. Chamar o LineageService do framework para construir o grafo genérico.
-        //    Navegamos "para cima" (UPSTREAM) a partir do personagem para encontrar seus pais, avós, etc.
+        // Chamar o LineageService do framework para construir o grafo genérico.
+        // Navega "para cima" (UPSTREAM) a partir do personagem para encontrar seus pais, avós, etc.
         GraphData graphData = lineageService.buildGraph(
                 entityId,
                 "É_PAI_DE", // O tipo de relação que queremos seguir
@@ -160,7 +158,7 @@ public class CharacterGenerationController {
                 5 // Profundidade máxima de 5 gerações
         );
 
-        // 3. Chamar o GraphVisualizer do framework para renderizar a imagem.
+        // Chamar o GraphVisualizer do framework para renderizar a imagem.
         VisualizationOptions options = VisualizationOptions.builder()
                 .outputFormat("png")
                 .graphAttributes(Map.of("rankdir", "BT")) // BT = Bottom to Top, ideal para árvores genealógicas
@@ -168,8 +166,8 @@ public class CharacterGenerationController {
 
         byte[] imagemBytes = graphVisualizer.visualize(graphData, options);
 
-        // Opcional: Salvar a imagem gerada no banco de dados da aplicação
-        // arvoreGenealogicaService.salvarImagem(characterId, imagemBytes);
+
+        //arvoreGenealogicaService.salvarImagem(characterId, imagemBytes);
 
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_PNG)
