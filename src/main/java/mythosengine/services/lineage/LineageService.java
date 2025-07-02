@@ -10,11 +10,7 @@ import mythosengine.services.storage.InMemoryStorageAdapter;
 import mythosengine.services.storage.JsonFileStorageAdapter;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class LineageService {
@@ -37,6 +33,30 @@ public class LineageService {
 
         return new GraphData(nodes, edges);
     }
+
+    private GraphNode createGraphNodeFromEntity(Entity entity) {
+
+
+
+        String label = entity.getProperty("nome")
+                .or(() -> entity.getProperty("name"))
+                .or(() -> entity.getProperty("title"))
+                .map(Object::toString)
+                .orElse(entity.getArchetype() + ":" + entity.getId().toString().substring(0, 4));
+
+
+        Map<String, String> properties = new HashMap<>();
+
+
+        entity.getProperty("ocupacao").ifPresent(value -> properties.put("ocupacao", value.toString()));
+        entity.getProperty("origem").ifPresent(value -> properties.put("origem", value.toString()));
+
+
+        return new GraphNode(entity.getId().toString(), label, properties);
+
+
+    }
+
 
     private void traverse(Entity currentEntity, String relationshipType, TraversalDirection direction,
                           int maxDepth, int currentDepth, Set<GraphNode> nodes, Set<GraphEdge> edges, Set<UUID> visited) {
@@ -95,13 +115,5 @@ public class LineageService {
 
     }
 
-    private GraphNode createGraphNodeFromEntity(Entity entity) {
-        String label = entity.getProperty("nome")
-                .or(() -> entity.getProperty("name"))
-                .or(() -> entity.getProperty("title"))
-                .map(Object::toString)
-                .orElse(entity.getArchetype() + ":" + entity.getId().toString().substring(0, 4));
 
-        return new GraphNode(entity.getId().toString(), label, Collections.emptyMap());
-    }
 }
