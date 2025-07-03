@@ -1,0 +1,32 @@
+# Template para geração de história de personagem em Dungeons & Dragons 5e
+system: "D&D 5e"
+generationType: "HISTORIA_PERSONAGEM"
+
+# Regras e palavras-chave específicas para guiar a LLM sobre o universo de D&D.
+rules:
+  - "O cenário pode se passar em um dos múltiplos mundos do multiverso, como Forgotten Realms, Eberron ou um cenário próprio."
+  - "Mencione o conceito de 'background' do personagem (ex: Acólito, Criminoso, Sábio) e como isso moldou sua vida."
+  - "Personagens geralmente têm um alinhamento (ex: Leal e Bom, Caótico e Neutro, etc.)."
+  - "O Panteão de deuses é vasto e variado (ex: Pelor, Tiamat, Moradin)."
+  - "Use termos como 'peças de ouro', 'masmorras', 'magia arcana vs. divina'."
+
+# O template do prompt usa placeholders {{...}} que serão substituídos pelos dados da aplicação.
+prompt: >
+  Gere uma história de personagem para o sistema de RPG '{{system.name}}'.
+  
+  **Contexto do Universo (Regras):**
+  {{rules}}
+
+  **Detalhes do Personagem:**
+  - **Campanha:** "{{campaign.title}}", que possui o seguinte enredo: {{campaign.description}}.
+  - **Raça:** {{race.name}}.
+  - **Classe:** {{characterClass.name}}.
+  
+  **Instruções:**
+  Crie um background criativo e coeso com o universo de Dungeons & Dragons. A história deve incluir:
+  1.  Um nome para o personagem.
+  2.  Sua origem e qual seu 'background' (profissão ou chamado antes de se tornar aventureiro).
+  3.  Sua motivação, alinhamento e, opcionalmente, uma divindade que segue.
+  4.  Um evento marcante que o levou à vida de aventuras.
+  
+  A resposta deve começar com a linha "Nome: <nome do personagem>" e seguir com a história em texto corrido.

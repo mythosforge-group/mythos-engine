@@ -72,7 +72,7 @@ public class CharacterGenerationController {
     }
 
     @PostMapping("/gerar-e-salvar")
-    public ResponseEntity<CharacterDnd> gerarFichaESalvar(
+    public ResponseEntity<Map<String, Object>> gerarFichaESalvar(
             @RequestParam Long campaignId,
             @RequestParam Long raceId,
             @RequestParam Long classId
@@ -117,7 +117,24 @@ public class CharacterGenerationController {
 
         CharacterDnd salvo = characterDndService.create(personagem);
 
-        return ResponseEntity.ok(salvo);
+        Map<String, Object> response = new HashMap<>();
+        response.put("id", salvo.getId());
+        response.put("nome", salvo.getNome());
+        response.put("historia", salvo.getHistoria());
+        response.put("nivel", salvo.getNivel());
+        response.put("xp", salvo.getXp());
+        response.put("forca", salvo.getForca());
+        response.put("destreza", salvo.getDestreza());
+        response.put("constituicao", salvo.getConstituicao());
+        response.put("inteligencia", salvo.getInteligencia());
+        response.put("sabedoria", salvo.getSabedoria());
+        response.put("carisma", salvo.getCarisma());
+
+        // Criamos objetos aninhados para raça e classe, como o teste espera
+        response.put("raca", Map.of("id", race.getId(), "name", race.getName(), "description", race.getDescription()));
+        response.put("characterClass", Map.of("id", characterClass.getId(), "name", characterClass.getName(), "description", characterClass.getDescription()));
+
+        return ResponseEntity.ok(response);
     }
 
     // Método auxiliar para rolar atributos (4d6 drop lowest)

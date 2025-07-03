@@ -32,3 +32,6 @@ build/
 ### VS Code ###
 .vscode/
 .env
+
+# Ignora o diretório de dados do Mythos Engine
+/mythos_engine_data/

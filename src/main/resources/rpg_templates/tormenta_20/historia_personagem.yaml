@@ -1,0 +1,31 @@
+# Template para geração de história de personagem em Tormenta 20
+system: "Tormenta 20"
+generationType: "HISTORIA_PERSONAGEM"
+
+# Regras e palavras-chave específicas para guiar a LLM sobre o universo de Tormenta.
+rules:
+  - "O mundo é chamado Arton."
+  - "Mencione a ameaça da Tormenta e o Panteão de deuses (ex: Khalmyr, Tenebra, Nimb)."
+  - "A magia é comum, mas perigosa."
+  - "Use termos como 'tibar', 'Lefou' (para raça meio-demônio), 'devoto'."
+
+# O template do prompt usa placeholders {{...}} que serão substituídos pelos dados da aplicação.
+prompt: >
+  Gere uma história de personagem para o sistema de RPG '{{system.name}}'.
+  
+  **Contexto do Universo (Regras):**
+  {{rules}}
+
+  **Detalhes do Personagem:**
+  - **Campanha:** "{{campaign.title}}" que se passa em um cenário onde: {{campaign.description}}.
+  - **Raça:** {{race.name}}.
+  - **Classe:** {{characterClass.name}}.
+  
+  **Instruções:**
+  Crie um background criativo e coeso com o universo de Arton. A história deve incluir:
+  1.  Um nome para o personagem.
+  2.  Sua origem (cidade ou região em Arton).
+  3.  Sua motivação principal, ligada à sua classe e à campanha.
+  4.  Uma relação importante (um amigo, um rival, um mentor).
+  
+  A resposta deve começar com a linha "Nome: <nome do personagem>" e seguir com a história em texto corrido.
