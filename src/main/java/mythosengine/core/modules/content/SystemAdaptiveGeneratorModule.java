@@ -28,9 +28,16 @@ public class SystemAdaptiveGeneratorModule implements IContentGeneratorModule {
 
     @Override
     public boolean supports(ContentGenerationContext context) {
-        // Este módulo é genérico. Ele suporta a geração se um template correspondente existir.
-        // (A lógica de verificação da existência do arquivo já está no templateService)
-        return true; 
+
+        Campaign campaign = (Campaign) context.getParameters().get("campaign");
+        if (campaign == null || campaign.getSystem() == null) {
+            return false;
+        }
+
+        return templateService.templateExists(
+                campaign.getSystem().getName(),
+                context.getGenerationType()
+        );
     }
 
     @Override

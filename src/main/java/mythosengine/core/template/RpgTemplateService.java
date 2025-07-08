@@ -64,4 +64,20 @@ public class RpgTemplateService {
 
         return processedPrompt;
     }
+
+    // Em mythosengine/core/template/RpgTemplateService.java
+
+// ...
+
+
+    public boolean templateExists(String systemName, String generationType) {
+        try {
+            String location = "classpath:rpg_templates/" + systemName.toLowerCase().replace(" ", "_") + "/" + generationType.toLowerCase() + ".yaml";
+            Resource resource = resourceLoader.getResource(location);
+            return resource.exists();
+        } catch (Exception e) {
+
+            return false;
+        }
+    }
 }
