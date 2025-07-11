@@ -10,7 +10,13 @@ import mythosengine.services.storage.InMemoryStorageAdapter;
 import mythosengine.services.storage.JsonFileStorageAdapter;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 @Service
 public class LineageService {
@@ -34,30 +40,6 @@ public class LineageService {
         return new GraphData(nodes, edges);
     }
 
-    private GraphNode createGraphNodeFromEntity(Entity entity) {
-
-
-
-        String label = entity.getProperty("nome")
-                .or(() -> entity.getProperty("name"))
-                .or(() -> entity.getProperty("title"))
-                .map(Object::toString)
-                .orElse(entity.getArchetype() + ":" + entity.getId().toString().substring(0, 4));
-
-
-        Map<String, String> properties = new HashMap<>();
-
-
-        entity.getProperty("ocupacao").ifPresent(value -> properties.put("ocupacao", value.toString()));
-        entity.getProperty("origem").ifPresent(value -> properties.put("origem", value.toString()));
-
-
-        return new GraphNode(entity.getId().toString(), label, properties);
-
-
-    }
-
-
     private void traverse(Entity currentEntity, String relationshipType, TraversalDirection direction,
                           int maxDepth, int currentDepth, Set<GraphNode> nodes, Set<GraphEdge> edges, Set<UUID> visited) {
 
@@ -77,7 +59,9 @@ public class LineageService {
 
     private void traverseDownstream(Entity currentEntity, String relationshipType, TraversalDirection direction, int maxDepth, int currentDepth, Set<GraphNode> nodes, Set<GraphEdge> edges, Set<UUID> visited) {
         currentEntity.getRelationships().stream()
-                .filter(rel -> rel.type().equals(relationshipType))
+                // --- INÍCIO DA CORREÇÃO ---
+                .filter(rel -> relationshipType == null || rel.type().equals(relationshipType))
+                // --- FIM DA CORREÇÃO ---
                 .forEach(rel -> {
                     edges.add(new GraphEdge(rel.sourceId().toString(), rel.targetId().toString(), rel.type()));
                     persistencePort.findById(rel.targetId()).ifPresent(nextEntity ->
@@ -88,32 +72,40 @@ public class LineageService {
 
     private void traverseUpstream(Entity currentEntity, String relationshipType, TraversalDirection direction, int maxDepth, int currentDepth, Set<GraphNode> nodes, Set<GraphEdge> edges, Set<UUID> visited) {
 
-
-
-        // Determina de onde obter todas as entidades para a busca reversa.
         Collection<Entity> allEntities;
         if (persistencePort instanceof InMemoryStorageAdapter adapter) {
             allEntities = adapter.findAll();
         } else if (persistencePort instanceof JsonFileStorageAdapter adapter) {
             allEntities = adapter.findAll();
         } else {
-            // Se não for uma implementação conhecida que suporta findAll, lança o erro.
             throw new UnsupportedOperationException("A travessia UPSTREAM não é suportada pela implementação de persistência atual: " + persistencePort.getClass().getName());
         }
 
-
         allEntities.forEach(potentialSource -> {
             potentialSource.getRelationships().stream()
-                    .filter(rel -> rel.type().equals(relationshipType) && rel.targetId().equals(currentEntity.getId()))
+                    // --- INÍCIO DA CORREÇÃO ---
+                    .filter(rel -> relationshipType == null || rel.type().equals(relationshipType))
+                    // --- FIM DA CORREÇÃO ---
+                    .filter(rel -> rel.targetId().equals(currentEntity.getId()))
                     .findFirst()
                     .ifPresent(rel -> {
                         edges.add(new GraphEdge(rel.sourceId().toString(), rel.targetId().toString(), rel.type()));
                         traverse(potentialSource, relationshipType, direction, maxDepth, currentDepth + 1, nodes, edges, visited);
                     });
         });
-
-
     }
 
+    private GraphNode createGraphNodeFromEntity(Entity entity) {
+        String label = entity.getProperty("nome")
+                .or(() -> entity.getProperty("name"))
+                .or(() -> entity.getProperty("title"))
+                .map(Object::toString)
+                .orElse(entity.getArchetype() + ":" + entity.getId().toString().substring(0, 4));
 
+        Map<String, String> properties = new HashMap<>();
+        entity.getProperty("ocupacao").ifPresent(value -> properties.put("ocupacao", value.toString()));
+        entity.getProperty("origem").ifPresent(value -> properties.put("origem", value.toString()));
+
+        return new GraphNode(entity.getId().toString(), label, properties);
+    }
 }
