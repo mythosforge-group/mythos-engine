@@ -47,9 +47,10 @@ public class LoreSuggestionModule implements IContentGeneratorModule {
 
         String prompt = PromptBuilderLore.buildLoreConnectionPrompt(sourceArticle.getNome(), sourceArticle.getHistoria());
         String llmResponse = llmClient.request(prompt);
+        String llmResponseclean = extractJsonArray(llmResponse);
 
         try {
-            List<SuggestedConnectionDTO> suggestions = objectMapper.readValue(llmResponse, new TypeReference<>() {});
+            List<SuggestedConnectionDTO> suggestions = objectMapper.readValue(llmResponseclean, new TypeReference<>() {});
             List<Entity> createdEntities = new ArrayList<>();
 
             Entity sourceFrameworkEntity = persistencePort.findById(sourceArticle.getEntityId())
@@ -79,6 +80,19 @@ public class LoreSuggestionModule implements IContentGeneratorModule {
         } catch (Exception e) {
             throw new RuntimeException("Falha ao processar sugestões da LLM.", e);
         }
+    }
+
+
+    private static String extractJsonArray(String rawResponse) {
+        int firstBracket = rawResponse.indexOf('[');
+        int lastBracket = rawResponse.lastIndexOf(']');
+
+        if (firstBracket != -1 && lastBracket != -1 && lastBracket > firstBracket) {
+            return rawResponse.substring(firstBracket, lastBracket + 1);
+        }
+
+        // Retorna null se não conseguir encontrar um array JSON válido
+        return null;
     }
 
     @Override

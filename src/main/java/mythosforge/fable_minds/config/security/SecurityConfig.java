@@ -48,7 +48,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/campaigns/**").authenticated()
                         .requestMatchers("/v3/**").permitAll() // Libera Swagger UI
                         .requestMatchers("/swagger-ui/**").permitAll() // Libera Swagger UI
-                        .requestMatchers("/h2-console/**").permitAll() // Libera h2-console
+                        .requestMatchers("/h2-console/**").permitAll()
+                        .requestMatchers("/api/auth/**", "/api/personagens/dnd/**", "/api/lore/**").permitAll() // Libera h2-console
                         .anyRequest().authenticated()
                 )
                 .userDetailsService(userDetailsService);
