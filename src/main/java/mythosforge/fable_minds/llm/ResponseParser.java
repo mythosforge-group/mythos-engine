@@ -30,4 +30,22 @@ public class ResponseParser {
     public static String extrairNpcResponse(String raw) {
         return raw.trim();
     }
+
+
+    public static String extractContentAfterThinkBlock(String rawResponse) {
+        if (rawResponse == null) {
+            return "";
+        }
+
+        String endTag = "</think>";
+        int endIndex = rawResponse.lastIndexOf(endTag);
+
+        if (endIndex != -1) {
+            // Retorna o texto que vem DEPOIS da tag </think>, removendo espaços em branco.
+            return rawResponse.substring(endIndex + endTag.length()).trim();
+        }
+
+        // Se não houver um bloco <think>, retorna a resposta inteira, apenas por segurança.
+        return rawResponse.trim();
+    }
 }

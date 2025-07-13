@@ -7,6 +7,7 @@ import mythosengine.core.modules.content.GeneratedContent;
 import mythosengine.core.modules.content.IContentGeneratorModule;
 import mythosengine.core.template.GenericTemplateService;
 import mythosengine.core.template.RpgTemplate;
+import mythosforge.fable_minds.llm.ResponseParser;
 import mythosforge.lore_weaver.llm.LlmClientServiceLore;
 import mythosforge.lore_weaver.models.LoreArticle;
 import org.springframework.stereotype.Component;
@@ -46,10 +47,12 @@ public class LoreArticleGeneratorModule implements IContentGeneratorModule {
         );
 
         String finalPrompt = templateService.processTemplate(template, templateData);
-        String llmResponse = llmClient.request(finalPrompt);
+        String llmRawResponse = llmClient.request(finalPrompt);
+
+        String cleanedText = ResponseParser.extractContentAfterThinkBlock(llmRawResponse);
 
         return GeneratedContent.builder()
-                .mainText(llmResponse) // Retorna o texto expandido
+                .mainText(cleanedText) // Retorna o texto expandido
                 .build();
     }
 
