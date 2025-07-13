@@ -75,7 +75,33 @@ public class LoreArticleController {
         return ResponseEntity.noContent().build();
     }
 
-    // === Endpoints que Utilizam o Framework ===
+
+
+
+
+    @PostMapping("/{id}/expand")
+    public ResponseEntity<LoreArticle> expandArticleContent(@PathVariable Long id) {
+
+        LoreArticle article = loreArticleService.findById(id);
+
+
+        ContentGenerationContext context = ContentGenerationContext.builder()
+                .generationType("EXPAND_ARTICLE")
+                .parameters(Map.of("article", article))
+                .build();
+
+
+        GeneratedContent result = generationEngine.process(context);
+
+
+        article.setHistoria(result.getMainText());
+
+
+        LoreArticle updatedArticle = loreArticleService.update(id, article);
+
+
+        return ResponseEntity.ok(updatedArticle);
+    }
 
     @PostMapping("/{id}/suggest-connections")
     public ResponseEntity<GeneratedContent> suggestConnections(@PathVariable Long id) {
@@ -88,6 +114,9 @@ public class LoreArticleController {
 
         GeneratedContent result = generationEngine.process(context);
         return ResponseEntity.ok(result);
+
+
+
     }
 
     @GetMapping("/{id}/graph")
