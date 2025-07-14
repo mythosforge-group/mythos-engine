@@ -36,6 +36,26 @@ public class LoreArticleService {
         return loreArticleRepository.save(article);
     }
 
+
+    public LoreArticle expandHistory(Long id, String expandedContent) {
+
+        LoreArticle article = findById(id);
+
+
+        article.setHistoria(expandedContent);
+
+
+        Entity frameworkEntity = persistencePort.findById(article.getEntityId())
+                .orElseThrow(() -> new IllegalStateException("Entidade do framework não encontrada para o artigo: " + id));
+
+        syncPropertiesToFramework(article, frameworkEntity);
+        persistencePort.save(frameworkEntity);
+
+
+        return loreArticleRepository.save(article);
+    }
+
+
     public LoreArticle update(Long id, LoreArticle updatedArticleData) {
         LoreArticle existingArticle = findById(id);
 

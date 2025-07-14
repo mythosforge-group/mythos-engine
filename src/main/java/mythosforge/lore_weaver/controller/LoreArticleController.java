@@ -97,7 +97,7 @@ public class LoreArticleController {
         article.setHistoria(result.getMainText());
 
 
-        LoreArticle updatedArticle = loreArticleService.update(id, article);
+        LoreArticle updatedArticle = loreArticleService.expandHistory(id, article.getHistoria());
 
 
         return ResponseEntity.ok(updatedArticle);
