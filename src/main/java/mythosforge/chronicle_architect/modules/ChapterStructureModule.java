@@ -1,20 +1,19 @@
 package mythosforge.chronicle_architect.modules;
 
-import org.springframework.stereotype.Component;
-
 import mythosengine.core.modules.content.ContentGenerationContext;
 import mythosengine.core.modules.content.GeneratedContent;
 import mythosengine.core.modules.content.IContentGeneratorModule;
-import mythosengine.services.llm.GeminiClientService;
+import mythosforge.chronicle_architect.llm.LlmClientServiceArchitect;
 import mythosforge.chronicle_architect.models.Book;
+import org.springframework.stereotype.Component;
 
 @Component
 public class ChapterStructureModule implements IContentGeneratorModule {
 
-    private final GeminiClientService geminiClient;
+    private final LlmClientServiceArchitect llmClient;
 
-    public ChapterStructureModule(GeminiClientService geminiClient) {
-        this.geminiClient = geminiClient;
+    public ChapterStructureModule(LlmClientServiceArchitect llmClient) {
+        this.llmClient = llmClient;
     }
 
     @Override
@@ -35,17 +34,17 @@ public class ChapterStructureModule implements IContentGeneratorModule {
             book.getTitle(), book.getDescription()
         );
 
-        String chapterList = geminiClient.generateContent(prompt);
+        String chapterList = llmClient.generateContent(prompt);
         return GeneratedContent.builder().mainText(chapterList).build();
     }
 
     @Override
     public String getModuleName() {
-        return "Chapter Structure Generator (Gemini)";
+        return "Chapter Structure Generator";
     }
 
     @Override
     public String getVersion() {
-        return "1.1.0";
+        return "1.2.0";
     }
 }

@@ -3,17 +3,17 @@ package mythosforge.chronicle_architect.modules;
 import mythosengine.core.modules.content.ContentGenerationContext;
 import mythosengine.core.modules.content.GeneratedContent;
 import mythosengine.core.modules.content.IContentGeneratorModule;
-import mythosengine.services.llm.GeminiClientService; // Importa o novo serviço
+import mythosforge.chronicle_architect.llm.LlmClientServiceArchitect;
 import mythosforge.chronicle_architect.models.Book;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GlossaryGenerationModule implements IContentGeneratorModule {
 
-    private final GeminiClientService geminiClient; // Injeta o serviço do Gemini
+    private final LlmClientServiceArchitect llmClient;
 
-    public GlossaryGenerationModule(GeminiClientService geminiClient) {
-        this.geminiClient = geminiClient;
+    public GlossaryGenerationModule(LlmClientServiceArchitect llmClient) {
+        this.llmClient = llmClient;
     }
 
     @Override
@@ -35,17 +35,17 @@ public class GlossaryGenerationModule implements IContentGeneratorModule {
             book.getDescription()
         );
 
-        String glossaryContent = geminiClient.generateContent(prompt);
+        String glossaryContent = llmClient.generateContent(prompt); 
         return GeneratedContent.builder().mainText(glossaryContent).build();
     }
 
     @Override
     public String getModuleName() {
-        return "Glossary Generator (Gemini)";
+        return "Glossary Generator";
     }
 
     @Override
     public String getVersion() {
-        return "1.1.0";
+        return "1.2.0";
     }
 }
