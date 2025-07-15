@@ -1,0 +1,13 @@
+system: "ChronicleArchitect"
+generationType: "BOOK_GENERATE_SPELL"
+rules:
+  - "A descrição deve ser clara, objetiva e formatada para fácil leitura em um manual."
+  - "Inclua os seguintes campos: Tempo de Conjuração, Alcance, Componentes (V, S, M), Duração, Efeito."
+prompt: |
+  Aja como um game designer. Crie a descrição detalhada de uma magia de RPG.
+
+  **Nome da Magia:** {{spell.name}}
+  **Nível:** {{spell.level}}
+  **Escola de Magia:** {{spell.school}}
+
+  **Descrição Completa:**

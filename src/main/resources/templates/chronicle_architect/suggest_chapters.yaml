@@ -1,0 +1,14 @@
+system: "ChronicleArchitect"
+generationType: "BOOK_SUGGEST_CHAPTERS"
+rules:
+  - "A resposta deve ser uma lista de títulos de capítulos, numerados."
+  - "Os títulos devem ser concisos e relevantes para o tema do livro."
+  - "Considere uma estrutura lógica: introdução, regras básicas, criação de personagem, sistemas de magia, equipamentos, bestiário, apêndices."
+prompt: |
+  Aja como um editor de livros de RPG experiente.
+  Com base no título e descrição de um livro, sugira uma estrutura de capítulos completa e lógica.
+
+  **Título do Livro:** "{{book.title}}"
+  **Descrição:** {{book.description}}
+
+  **Estrutura de Capítulos Sugerida:**

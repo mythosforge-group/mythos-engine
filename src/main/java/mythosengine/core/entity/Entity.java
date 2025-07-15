@@ -55,6 +55,9 @@ public class Entity {
 
 
     public void addProperty(String name, Object value) {
+        if (value == null) {
+            return;
+        }
         System.out.println("KERNEL: Propriedade '" + name + "' adicionada/atualizada na entidade " + this.id);
         this.properties.put(name, new Property(value, value.getClass()));
     }
