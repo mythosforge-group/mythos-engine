@@ -15,6 +15,7 @@ import mythosforge.fable_minds.repository.CampaignRepository;
 import mythosforge.fable_minds.repository.CharacterRepository;
 import mythosforge.fable_minds.repository.MissaoSecundariaRepository;
 import mythosforge.fable_minds.repository.UserRepository;
+import mythosengine.services.llm.GeminiClientService; 
 
 @Service
 public class MissaoSecundariaService {
@@ -22,17 +23,20 @@ public class MissaoSecundariaService {
     private final UserRepository   userRepository;
     private final CampaignRepository campaignRepository;
     private final CharacterRepository characterRepository;
+    private final GeminiClientService geminiClient;
 
     public MissaoSecundariaService(
         MissaoSecundariaRepository missaoSecundariaRepository,
         UserRepository userRepository,
         CampaignRepository campaignRepository,
-        CharacterRepository characterRepository
+        CharacterRepository characterRepository,
+        GeminiClientService geminiClient
     ) {
         this.missaoSecundariaRepository = missaoSecundariaRepository;
         this.userRepository = userRepository;
         this.campaignRepository = campaignRepository;
         this.characterRepository = characterRepository;
+        this.geminiClient = geminiClient;
     }
 
     /**
@@ -89,40 +93,17 @@ public class MissaoSecundariaService {
      * return Uma MissaoSecundaria gerada com o Gemini AI.
     */
     private MissaoSecundaria gerarMissaoSecundariaComGemini(Character character, Campaign campaign) {
-        var client = new Client();
+        String titlePrompt = "Crie apenas um titulo curto para uma missão secundária baseada na seguinte história do personagem: " + character.getHistoria();
+        String title = geminiClient.generateContent(titlePrompt);
 
-        var titlePrompt = "Crie apenas um titulo curto para uma missão secundária baseada na seguinte história do personagem: " + character.getHistoria();
-        var titleConfig = GenerateContentConfig.builder()
-            .maxOutputTokens(10)
-            .temperature(0.8F) // opcional. Vai ficar muito louco!!!
-            .build();
-
-        var titleResponse = client.models.generateContent(
-            "gemini-2.0-flash",
-            titlePrompt,
-            titleConfig 
-        );
-        var title = titleResponse.text();
-
-        var storyPrompt = "Crie uma história bem curta para uma missão secundária baseada na seguinte descrição da campanha: " + campaign.getDescription();
-        var storyConfig = GenerateContentConfig.builder()
-            .maxOutputTokens(500)
-            .temperature(0.8F) // opcional. Vai ficar muito louco!!!
-            .build();
-        var storyResponse = client.models.generateContent(
-                "gemini-2.0-flash",
-                storyPrompt,
-                storyConfig
-        );
-        var story = storyResponse.text();
-
-        client.close();
-
+        String storyPrompt = "Crie uma história bem curta para uma missão secundária baseada na seguinte descrição da campanha: " + campaign.getDescription();
+        String story = geminiClient.generateContent(storyPrompt);
+        
         MissaoSecundaria missaoSecundaria = new MissaoSecundaria();
         missaoSecundaria.setTitulo(title);
         missaoSecundaria.setHistoria(story);
-        missaoSecundaria.setCampanha(campaign); // Atribui a campanha aleatória escolhida
-        missaoSecundaria.setPersonagens(List.of(character)); // Atribui o personagem aleatório escolhido
+        missaoSecundaria.setCampanha(campaign);
+        missaoSecundaria.setPersonagens(List.of(character));
         return missaoSecundaria;
     }
 }

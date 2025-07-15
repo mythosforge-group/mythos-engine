@@ -5,13 +5,13 @@ import org.springframework.stereotype.Component;
 import mythosengine.core.modules.content.ContentGenerationContext;
 import mythosengine.core.modules.content.GeneratedContent;
 import mythosengine.core.modules.content.IContentGeneratorModule;
-import mythosengine.services.llm.GeminiClientService; // Importa o novo serviço
+import mythosengine.services.llm.GeminiClientService;
 import mythosforge.chronicle_architect.models.Book;
 
 @Component
 public class ChapterStructureModule implements IContentGeneratorModule {
 
-    private final GeminiClientService geminiClient; // Injeta o serviço do Gemini
+    private final GeminiClientService geminiClient;
 
     public ChapterStructureModule(GeminiClientService geminiClient) {
         this.geminiClient = geminiClient;

@@ -32,7 +32,7 @@ public class GlossaryGenerationModule implements IContentGeneratorModule {
             "Analise o seguinte texto de um livro de RPG: '%s'. " +
             "Extraia de 5 a 10 termos chave que seriam úteis em um glossário. " +
             "Retorne a lista no formato 'Termo: Definição concisa.', com um termo por linha.",
-            book.getDescription() // Em um caso real, poderíamos concatenar o conteúdo de todos os capítulos
+            book.getDescription()
         );
 
         String glossaryContent = geminiClient.generateContent(prompt);
