@@ -3,12 +3,14 @@ package mythosforge.chronicle_architect.service;
 import jakarta.persistence.EntityNotFoundException;
 import mythosengine.core.entity.Entity;
 import mythosengine.core.persistence.PersistencePort;
+import mythosforge.chronicle_architect.controller.BookResponseDTO;
 import mythosforge.chronicle_architect.models.Book;
 import mythosforge.chronicle_architect.repository.BookRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -37,6 +39,12 @@ public class ChronicleArchitectService {
 
     public List<Book> findAllBooks() {
         return bookRepository.findAll();
+    }
+
+    public List<BookResponseDTO> findAllBooksAsDTO() {
+        return bookRepository.findAll().stream()
+            .map(BookResponseDTO::new)
+            .collect(Collectors.toList());
     }
 
     public Book updateBook(Long id, Book bookDetails) {

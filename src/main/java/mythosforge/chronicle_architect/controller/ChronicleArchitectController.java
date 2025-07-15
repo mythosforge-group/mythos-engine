@@ -42,8 +42,8 @@ public class ChronicleArchitectController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Book>> getAllBooks() {
-        return ResponseEntity.ok(chronicleArchitectService.findAllBooks());
+    public ResponseEntity<List<BookResponseDTO>> getAllBooks() {
+        return ResponseEntity.ok(chronicleArchitectService.findAllBooksAsDTO());
     }
 
     @DeleteMapping("/{id}")
