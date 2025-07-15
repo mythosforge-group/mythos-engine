@@ -53,29 +53,36 @@ public class ChronicleArchitectController {
     }
     
 
+    /**
+     * Aciona o módulo para sugerir uma estrutura de capítulos para um livro existente.
+     */
     @PostMapping("/{bookId}/suggest-chapters")
     public ResponseEntity<String> suggestChapters(@PathVariable Long bookId) {
         Book book = chronicleArchitectService.findBookById(bookId);
 
         ContentGenerationContext context = ContentGenerationContext.builder()
-                .generationType("STRUCTURE_CHAPTERS")
-                .parameters(Map.of("book", book))
-                .build();
+            .generationType("STRUCTURE_CHAPTERS")
+            .parameters(Map.of("book", book))
+            .build();
 
-        GeneratedContent result = generationEngine.process(context);
+        GeneratedContent result = generationEngine.process(context);        
         return ResponseEntity.ok(result.getMainText());
     }
 
+    /**
+     * Aciona o módulo para gerar um glossário com base na descrição de um livro.
+     */
     @PostMapping("/{bookId}/suggest-glossary")
     public ResponseEntity<String> suggestGlossary(@PathVariable Long bookId) {
         Book book = chronicleArchitectService.findBookById(bookId);
 
         ContentGenerationContext context = ContentGenerationContext.builder()
-                .generationType("GENERATE_GLOSSARY")
-                .parameters(Map.of("book", book))
-                .build();
+            .generationType("GENERATE_GLOSSARY")
+            .parameters(Map.of("book", book))
+            .build();
 
         GeneratedContent result = generationEngine.process(context);
+
         return ResponseEntity.ok(result.getMainText());
     }
 }
