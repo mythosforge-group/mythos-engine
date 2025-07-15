@@ -21,6 +21,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import mythosengine.config.security.authentication.service.auth.models.Users;
 
 @Entity
 @Table(name = "campaign")

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import mythosengine.core.modules.content.IContentGeneratorModule;
 import mythosengine.core.modules.content.ContentGenerationContext;
 import mythosengine.core.modules.content.GeneratedContent;
-import mythosforge.fable_minds.config.security.auhentication.dto.SystemDTO;
+import mythosforge.fable_minds.dto.SystemDTO;
 import mythosforge.fable_minds.llm.LlmClientService;
 import mythosforge.fable_minds.llm.PromptBuilder;
 import mythosforge.fable_minds.llm.ResponseParser;

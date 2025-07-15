@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import mythosforge.fable_minds.config.security.auhentication.dto.CharacterClassDTO;
+import mythosforge.fable_minds.dto.CharacterClassDTO;
 import mythosforge.fable_minds.exceptions.BusinessException;
 import mythosforge.fable_minds.models.CharacterClass;
 import mythosforge.fable_minds.repository.CharacterClassRepository;

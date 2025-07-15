@@ -2,7 +2,7 @@ package mythosforge.fable_minds.service.interfaces;
 
 import java.util.List;
 
-import mythosforge.fable_minds.config.security.auhentication.dto.CharacterClassDTO;
+import mythosforge.fable_minds.dto.CharacterClassDTO;
 import mythosforge.fable_minds.models.CharacterClass;
 
 public interface ICharacterClassService {

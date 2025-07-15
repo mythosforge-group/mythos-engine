@@ -1,10 +1,10 @@
 package mythosforge.fable_minds.service;
 
-import mythosforge.fable_minds.config.security.auhentication.dto.CharacterClassDTO;
-import mythosforge.fable_minds.config.security.auhentication.dto.RaceDTO;
-import mythosforge.fable_minds.config.security.auhentication.dto.SystemDTO;
 import mythosforge.fable_minds.llm.PromptBuilder;
 import mythosforge.fable_minds.llm.ResponseParser;
+import mythosforge.fable_minds.dto.CharacterClassDTO;
+import mythosforge.fable_minds.dto.RaceDTO;
+import mythosforge.fable_minds.dto.SystemDTO;
 import mythosforge.fable_minds.llm.LlmClientService;
 import mythosforge.fable_minds.models.*;
 import mythosforge.fable_minds.service.interfaces.ICharacterGenerationService;

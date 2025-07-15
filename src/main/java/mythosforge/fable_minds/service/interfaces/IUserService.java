@@ -1,10 +1,10 @@
 package mythosforge.fable_minds.service.interfaces;
 
-import mythosforge.fable_minds.config.security.auhentication.dto.UpdateUserDTO;
-import mythosforge.fable_minds.models.Users;
-
 import java.util.List;
 import java.util.Optional;
+
+import mythosengine.config.security.authentication.dto.UpdateUserDTO;
+import mythosengine.config.security.authentication.service.auth.models.Users;
 
 public interface IUserService {
     Users createUser(Users user);

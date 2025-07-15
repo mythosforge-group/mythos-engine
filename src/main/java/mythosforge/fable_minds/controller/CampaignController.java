@@ -22,8 +22,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
-import mythosforge.fable_minds.config.security.auhentication.dto.CampaignDTO;
-import mythosforge.fable_minds.config.security.auhentication.dto.CampaignResponseDTO;
+import mythosforge.fable_minds.dto.CampaignDTO;
+import mythosforge.fable_minds.dto.CampaignResponseDTO;
 import mythosforge.fable_minds.models.Campaign;
 import mythosforge.fable_minds.service.CampaignService;
 

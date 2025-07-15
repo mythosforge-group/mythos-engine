@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import mythosforge.fable_minds.config.security.auhentication.dto.UpdateUserDTO;
-import mythosforge.fable_minds.config.security.auhentication.dto.UserRegisterDTO;
+import mythosengine.config.security.authentication.dto.UpdateUserDTO;
+import mythosengine.config.security.authentication.dto.UserRegisterDTO;
+import mythosengine.config.security.authentication.service.auth.models.Users;
 import mythosforge.fable_minds.models.ErrorResponse;
-import mythosforge.fable_minds.models.Users;
 import mythosforge.fable_minds.service.UserService;
 
 /* ENDPOINTS

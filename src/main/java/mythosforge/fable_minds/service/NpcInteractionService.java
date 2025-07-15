@@ -1,8 +1,8 @@
 package mythosforge.fable_minds.service;
 
 import mythosforge.fable_minds.llm.PromptBuilder;
-import mythosforge.fable_minds.config.security.auhentication.dto.NpcConversationResponseDTO;
-import mythosforge.fable_minds.config.security.auhentication.dto.NpcMessageResponseDTO;
+import mythosforge.fable_minds.dto.NpcConversationResponseDTO;
+import mythosforge.fable_minds.dto.NpcMessageResponseDTO;
 import mythosforge.fable_minds.llm.LlmClientService;
 import mythosforge.fable_minds.llm.ResponseParser;
 import mythosforge.fable_minds.models.NpcConversation;

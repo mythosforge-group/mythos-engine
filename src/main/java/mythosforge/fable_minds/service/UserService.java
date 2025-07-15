@@ -2,15 +2,16 @@ package mythosforge.fable_minds.service;
 
 
 
-import mythosforge.fable_minds.config.security.auhentication.dto.UpdateUserDTO;
 import mythosforge.fable_minds.exceptions.BusinessException;
-import mythosforge.fable_minds.models.Users;
-import mythosforge.fable_minds.repository.UserRepository;
 import mythosforge.fable_minds.service.interfaces.IUserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import mythosengine.config.security.authentication.dto.UpdateUserDTO;
+import mythosengine.config.security.authentication.service.auth.models.Users;
+import mythosengine.config.security.authentication.service.auth.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;

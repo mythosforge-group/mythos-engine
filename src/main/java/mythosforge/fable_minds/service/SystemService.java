@@ -6,10 +6,10 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import mythosforge.fable_minds.config.security.auhentication.dto.SystemDTO;
 import mythosforge.fable_minds.models.System;
 import mythosforge.fable_minds.repository.SystemRepository;
 import mythosforge.fable_minds.service.interfaces.ISystemService;
+import mythosforge.fable_minds.dto.SystemDTO;
 import mythosforge.fable_minds.exceptions.BusinessException;
 
 @Service

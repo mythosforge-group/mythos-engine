@@ -5,7 +5,6 @@ import mythosforge.fable_minds.models.Campaign;
 import mythosforge.fable_minds.models.CharacterClass;
 import mythosforge.fable_minds.models.Race;
 import mythosforge.fable_minds.models.System;
-import mythosforge.fable_minds.models.Users;
 import mythosforge.fable_minds.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +19,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+
+import mythosengine.config.security.authentication.service.auth.models.Users;
+import mythosengine.config.security.authentication.service.auth.repository.UserRepository;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;

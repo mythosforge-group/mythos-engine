@@ -52,16 +52,14 @@ public class LineageService {
 
         if (direction == TraversalDirection.DOWNSTREAM) {
             traverseDownstream(currentEntity, relationshipType, direction, maxDepth, currentDepth, nodes, edges, visited);
-        } else { // UPSTREAM
+        } else {
             traverseUpstream(currentEntity, relationshipType, direction, maxDepth, currentDepth, nodes, edges, visited);
         }
     }
 
     private void traverseDownstream(Entity currentEntity, String relationshipType, TraversalDirection direction, int maxDepth, int currentDepth, Set<GraphNode> nodes, Set<GraphEdge> edges, Set<UUID> visited) {
         currentEntity.getRelationships().stream()
-                // --- INÍCIO DA CORREÇÃO ---
                 .filter(rel -> relationshipType == null || rel.type().equals(relationshipType))
-                // --- FIM DA CORREÇÃO ---
                 .forEach(rel -> {
                     edges.add(new GraphEdge(rel.sourceId().toString(), rel.targetId().toString(), rel.type()));
                     persistencePort.findById(rel.targetId()).ifPresent(nextEntity ->
@@ -83,9 +81,7 @@ public class LineageService {
 
         allEntities.forEach(potentialSource -> {
             potentialSource.getRelationships().stream()
-                    // --- INÍCIO DA CORREÇÃO ---
                     .filter(rel -> relationshipType == null || rel.type().equals(relationshipType))
-                    // --- FIM DA CORREÇÃO ---
                     .filter(rel -> rel.targetId().equals(currentEntity.getId()))
                     .findFirst()
                     .ifPresent(rel -> {

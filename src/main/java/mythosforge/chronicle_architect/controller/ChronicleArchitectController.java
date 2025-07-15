@@ -33,7 +33,12 @@ public class ChronicleArchitectController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Book> getBookById(@PathVariable Long id) {
-        return ResponseEntity.ok(chronicleArchitectService.findBookById(id));
+        try {
+            Book book = chronicleArchitectService.findBookById(id);
+            return ResponseEntity.ok(book);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping

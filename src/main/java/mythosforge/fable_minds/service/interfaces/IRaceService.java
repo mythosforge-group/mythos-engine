@@ -2,7 +2,7 @@ package mythosforge.fable_minds.service.interfaces;
 
 import java.util.List;
 
-import mythosforge.fable_minds.config.security.auhentication.dto.RaceDTO;
+import mythosforge.fable_minds.dto.RaceDTO;
 import mythosforge.fable_minds.models.Race;
 
 public interface IRaceService {

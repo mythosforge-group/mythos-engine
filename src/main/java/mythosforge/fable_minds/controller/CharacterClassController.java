@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import mythosforge.fable_minds.config.security.auhentication.dto.CharacterClassDTO;
+import mythosforge.fable_minds.dto.CharacterClassDTO;
 import mythosforge.fable_minds.models.CharacterClass;
 import mythosforge.fable_minds.service.CharacterClassService;
 

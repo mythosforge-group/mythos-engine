@@ -14,7 +14,7 @@ import mythosforge.fable_minds.models.Character;
 import mythosforge.fable_minds.repository.CampaignRepository;
 import mythosforge.fable_minds.repository.CharacterRepository;
 import mythosforge.fable_minds.repository.MissaoSecundariaRepository;
-import mythosforge.fable_minds.repository.UserRepository;
+import mythosengine.config.security.authentication.service.auth.repository.UserRepository;
 import mythosengine.services.llm.GeminiClientService; 
 
 @Service

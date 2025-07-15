@@ -4,9 +4,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import mythosforge.fable_minds.config.security.auhentication.dto.CharacterClassDTO;
-import mythosforge.fable_minds.config.security.auhentication.dto.RaceDTO;
-import mythosforge.fable_minds.config.security.auhentication.dto.SystemDTO;
+import mythosforge.fable_minds.dto.CharacterClassDTO;
+import mythosforge.fable_minds.dto.RaceDTO;
+import mythosforge.fable_minds.dto.SystemDTO;
 import mythosforge.fable_minds.models.Campaign;
 import mythosforge.fable_minds.models.NpcMessage;
 

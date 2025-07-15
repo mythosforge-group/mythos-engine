@@ -6,10 +6,10 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import mythosforge.fable_minds.config.security.auhentication.dto.RaceDTO;
 import mythosforge.fable_minds.models.Race;
 import mythosforge.fable_minds.repository.RaceRepository;
 import mythosforge.fable_minds.service.interfaces.IRaceService;
+import mythosforge.fable_minds.dto.RaceDTO;
 import mythosforge.fable_minds.exceptions.BusinessException;
 
 @Service

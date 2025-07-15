@@ -1,8 +1,8 @@
 package mythosforge.fable_minds.controller;
 
-import mythosforge.fable_minds.config.security.auhentication.dto.NpcConversationRequestDTO;
-import mythosforge.fable_minds.config.security.auhentication.dto.NpcConversationResponseDTO;
-import mythosforge.fable_minds.config.security.auhentication.dto.NpcMessageRequestDTO;
+import mythosforge.fable_minds.dto.NpcConversationRequestDTO;
+import mythosforge.fable_minds.dto.NpcConversationResponseDTO;
+import mythosforge.fable_minds.dto.NpcMessageRequestDTO;
 import mythosforge.fable_minds.models.NpcConversation;
 import mythosforge.fable_minds.service.NpcInteractionService;
 import org.springframework.http.ResponseEntity;
