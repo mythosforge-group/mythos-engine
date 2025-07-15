@@ -9,3 +9,5 @@ spring:
 jwt:
     secret: 0123456789abcdef0123456789abcdef
     expiration: 86400000
+gemini:
+    api-key: SUA_CHAVE_API_AQUI

@@ -1,19 +1,22 @@
-{
-  "properties": [
-    {
-      "name": "jwt.secret",
-      "type": "java.lang.String",
-      "description": "Chave secreta utilizada para assinar e verificar a autenticidade dos tokens JWT (JSON Web Tokens). Deve ser uma string forte e mantida em sigilo."
-    },
-    {
-      "name": "jwt.expiration",
-      "type": "java.lang.String",
-      "description": "Define o tempo de validade (em milissegundos) para os tokens JWT gerados. Após este período, o token expira e não é mais válido para autenticação."
-    },
-    {
-      "name": "genai.api-key",
-      "type": "java.lang.String",
-      "description": "Chave de API necessária para autenticar e autorizar o uso dos serviços de Inteligência Artificial Generativa (por exemplo, Google Gemini, DeepSeek, etc.)."
-    }
-  ]
-}
+{"properties": [
+  {
+    "name": "jwt.secret",
+    "type": "java.lang.String",
+    "description": "Chave secreta utilizada para assinar e verificar a autenticidade dos tokens JWT (JSON Web Tokens). Deve ser uma string forte e mantida em sigilo."
+  },
+  {
+    "name": "jwt.expiration",
+    "type": "java.lang.String",
+    "description": "Define o tempo de validade (em milissegundos) para os tokens JWT gerados. Após este período, o token expira e não é mais válido para autenticação."
+  },
+  {
+    "name": "genai.api-key",
+    "type": "java.lang.String",
+    "description": "Chave de API necessária para autenticar e autorizar o uso dos serviços de Inteligência Artificial Generativa (por exemplo, Google Gemini, DeepSeek, etc.)."
+  },
+  {
+    "name": "gemini.api-key",
+    "type": "java.lang.String",
+    "description": "Chave de API específica para o serviço Gemini, necessária para autenticar e autorizar o uso dos recursos deste serviço de IA generativa."
+  }
+]}
