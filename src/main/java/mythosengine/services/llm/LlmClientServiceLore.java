@@ -1,4 +1,4 @@
-package mythosforge.lore_weaver.llm;
+package mythosengine.services.llm;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

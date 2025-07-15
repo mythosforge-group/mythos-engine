@@ -7,8 +7,9 @@ import mythosengine.core.modules.content.GeneratedContent;
 import mythosengine.core.modules.content.IContentGeneratorModule;
 import mythosengine.core.template.GenericTemplateService;
 import mythosengine.core.template.RpgTemplate;
+import mythosengine.services.llm.LlmClientServiceLore;
 import mythosforge.fable_minds.llm.ResponseParser;
-import mythosforge.lore_weaver.llm.LlmClientServiceLore;
+
 import mythosforge.lore_weaver.models.LoreArticle;
 import org.springframework.stereotype.Component;
 

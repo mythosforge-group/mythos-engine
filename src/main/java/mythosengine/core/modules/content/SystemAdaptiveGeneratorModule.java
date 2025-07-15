@@ -1,8 +1,8 @@
 package mythosengine.core.modules.content;
 
 import mythosengine.core.template.RpgTemplate;
+import mythosengine.services.llm.LlmClientServiceLore;
 import mythosengine.core.template.GenericTemplateService; // <<< MUDANÇA
-import mythosforge.lore_weaver.llm.LlmClientServiceLore;
 
 import mythosforge.fable_minds.llm.ResponseParser;
 import mythosforge.fable_minds.models.Campaign;

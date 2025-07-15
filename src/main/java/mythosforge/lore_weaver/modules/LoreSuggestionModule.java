@@ -12,7 +12,7 @@ import mythosengine.core.modules.content.ContentGenerationContext;
 import mythosengine.core.modules.content.GeneratedContent;
 import mythosengine.core.modules.content.IContentGeneratorModule;
 import mythosengine.core.persistence.PersistencePort;
-import mythosforge.lore_weaver.llm.LlmClientServiceLore;
+import mythosengine.services.llm.LlmClientServiceLore;
 import mythosforge.lore_weaver.llm.PromptBuilderLore;
 import org.springframework.stereotype.Component;
 

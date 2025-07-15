@@ -11,11 +11,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  * componentes, entidades JPA e repositórios em todos os módulos do projeto.
  */
 @SpringBootApplication(scanBasePackages = {
-		"mythosforge",  // Escaneia componentes gerais (@Service, @Controller) em todos os módulos da aplicação.
+		"mythosforge.fable_minds",  // Escaneia componentes gerais (@Service, @Controller) em todos os módulos da aplicação.
 		"mythosengine"  // Escaneia todos os componentes do framework base.
 })
-@EnableJpaRepositories(basePackages = {"mythosforge"}) // FORÇA o scan de repositórios JPA em todos os módulos 'mythosforge'.
-@EntityScan(basePackages = {"mythosforge"}) // FORÇA o scan de entidades (@Entity) em todos os módulos 'mythosforge'.
+@EnableJpaRepositories(basePackages = {"mythosforge.fable_minds"}) // FORÇA o scan de repositórios JPA em todos os módulos 'mythosforge'.
+@EntityScan(basePackages = {"mythosforge.fable_minds"}) // FORÇA o scan de entidades (@Entity) em todos os módulos 'mythosforge'.
 public class FableMindsApplication {
 
 	public static void main(String[] args) {
