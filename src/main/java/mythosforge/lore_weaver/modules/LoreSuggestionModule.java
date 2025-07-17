@@ -8,11 +8,11 @@ import mythosforge.lore_weaver.models.LoreArticle;
 import mythosforge.lore_weaver.modules.dto.SuggestedConnectionDTO;
 import mythosforge.lore_weaver.services.LoreArticleService;
 import mythosengine.core.entity.Entity;
-import mythosengine.core.modules.content.ContentGenerationContext;
-import mythosengine.core.modules.content.GeneratedContent;
-import mythosengine.core.modules.content.IContentGeneratorModule;
 import mythosengine.core.persistence.PersistencePort;
-import mythosengine.services.llm.LlmClientServiceLore;
+import mythosengine.spi.content.ContentGenerationContext;
+import mythosengine.spi.content.GeneratedContent;
+import mythosengine.spi.content.IContentGeneratorModule;
+import mythosforge.lore_weaver.llm.LlmClientServiceLore;
 import mythosforge.lore_weaver.llm.PromptBuilderLore;
 import org.springframework.stereotype.Component;
 

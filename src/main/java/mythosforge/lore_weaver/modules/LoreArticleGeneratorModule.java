@@ -1,59 +1,46 @@
 package mythosforge.lore_weaver.modules;
 
-
-
-import mythosengine.core.modules.content.ContentGenerationContext;
-import mythosengine.core.modules.content.GeneratedContent;
-import mythosengine.core.modules.content.IContentGeneratorModule;
-import mythosengine.core.template.GenericTemplateService;
-import mythosengine.core.template.RpgTemplate;
-import mythosengine.services.llm.LlmClientServiceLore;
+import mythosengine.services.llm.GeminiClientService;
+import mythosengine.spi.content.ContentGenerationContext;
+import mythosengine.spi.content.GeneratedContent;
+import mythosengine.spi.content.IContentGeneratorModule;
+import mythosengine.spi.prompt.PromptResolver;
 import mythosforge.fable_minds.llm.ResponseParser;
-
-import mythosforge.lore_weaver.models.LoreArticle;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
+import java.util.List;
 
 @Component
 public class LoreArticleGeneratorModule implements IContentGeneratorModule {
 
-    private final LlmClientServiceLore llmClient;
-    private final GenericTemplateService templateService;
+    private final GeminiClientService llmClient;
+    private final List<PromptResolver> promptResolvers;
 
-    public LoreArticleGeneratorModule(LlmClientServiceLore llmClient, GenericTemplateService templateService) {
+    public LoreArticleGeneratorModule(GeminiClientService llmClient, List<PromptResolver> promptResolvers) {
         this.llmClient = llmClient;
-        this.templateService = templateService;
+        this.promptResolvers = promptResolvers;
     }
 
     @Override
     public boolean supports(ContentGenerationContext context) {
-        // Este módulo só funciona se o contexto contiver um LoreArticle
-        // e se o tipo de geração for para expandir.
-        if (!context.getParameters().containsKey("article")) {
-            return false;
-        }
-        return "EXPAND_ARTICLE".equals(context.getGenerationType());
+        // Este módulo agora pode suportar qualquer contexto que um de seus resolvers suporte.
+        return "EXPAND_ARTICLE".equals(context.getGenerationType()) &&
+               promptResolvers.stream().anyMatch(r -> r.supports(context));
     }
 
     @Override
     public GeneratedContent generate(ContentGenerationContext context) {
-        LoreArticle article = (LoreArticle) context.getParameters().get("article");
+        PromptResolver resolver = promptResolvers.stream()
+            .filter(r -> r.supports(context))
+            .findFirst()
+            .orElseThrow(() -> new IllegalStateException("Nenhum PromptResolver para EXPAND_ARTICLE."));
 
-        RpgTemplate template = templateService.getTemplate("lore_weaver", "expand_article");
-
-        Map<String, Object> templateData = Map.of(
-                "article.name", article.getNome(),
-                "article.content", article.getHistoria()
-        );
-
-        String finalPrompt = templateService.processTemplate(template, templateData);
-        String llmRawResponse = llmClient.request(finalPrompt);
-
+        String finalPrompt = resolver.resolve(context);
+        String llmRawResponse = llmClient.generateContent(finalPrompt);
         String cleanedText = ResponseParser.extractContentAfterThinkBlock(llmRawResponse);
 
         return GeneratedContent.builder()
-                .mainText(cleanedText) // Retorna o texto expandido
+                .mainText(cleanedText)
                 .build();
     }
 
@@ -64,7 +51,6 @@ public class LoreArticleGeneratorModule implements IContentGeneratorModule {
 
     @Override
     public String getVersion() {
-        return "1.0.0";
+        return "2.0.0";
     }
 }
-

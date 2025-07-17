@@ -1,16 +1,17 @@
 package mythosforge.chronicle_architect.controller;
 
-import mythosengine.services.lineage.LineageService;
-import mythosengine.services.lineage.dto.GraphData;
-import mythosengine.services.lineage.dto.TraversalDirection;
-import mythosengine.services.lineage.visualizer.GraphVisualizer;
-import mythosengine.services.lineage.visualizer.VisualizationOptions;
 import mythosforge.chronicle_architect.models.RuleComponent;
 import mythosforge.chronicle_architect.models.SkillComponent;
 import mythosforge.chronicle_architect.service.RuleComponentService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import mythosengine.spi.lineage.GraphVisualizer;
+import mythosengine.spi.lineage.LineageService;
+import mythosengine.spi.lineage.dto.GraphData;
+import mythosengine.spi.lineage.dto.TraversalDirection;
+import mythosengine.spi.lineage.dto.VisualizationOptions;
 
 import java.util.List;
 import java.util.Map;

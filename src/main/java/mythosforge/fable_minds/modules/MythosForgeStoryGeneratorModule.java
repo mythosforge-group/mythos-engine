@@ -1,93 +1,60 @@
 package mythosforge.fable_minds.modules;
 
+import mythosengine.services.llm.GeminiClientService;
+import mythosengine.spi.content.ContentGenerationContext;
+import mythosengine.spi.content.GeneratedContent;
+import mythosengine.spi.content.IContentGeneratorModule;
+import mythosengine.spi.prompt.PromptResolver; // <-- USA A ABSTRAÇÃO
+import mythosforge.fable_minds.llm.ResponseParser;
+import org.springframework.stereotype.Component;
+
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.stereotype.Service;
-
-import mythosengine.core.modules.content.IContentGeneratorModule;
-import mythosengine.core.modules.content.ContentGenerationContext;
-import mythosengine.core.modules.content.GeneratedContent;
-import mythosforge.fable_minds.dto.SystemDTO;
-import mythosforge.fable_minds.llm.LlmClientService;
-import mythosforge.fable_minds.llm.PromptBuilder;
-import mythosforge.fable_minds.llm.ResponseParser;
-import mythosforge.fable_minds.models.Campaign;
-import mythosforge.fable_minds.models.CharacterClass;
-import mythosforge.fable_minds.models.Race;
-
-@Service // Marcamos como um serviço Spring para ser descoberto automaticamente
+@Component
 public class MythosForgeStoryGeneratorModule implements IContentGeneratorModule {
 
-    private final LlmClientService llmClient;
+    private final GeminiClientService llmClient;
+    private final List<PromptResolver> promptResolvers; // <-- Injeta uma lista de todas as implementações disponíveis
 
-    public MythosForgeStoryGeneratorModule(LlmClientService llmClient) {
+    public MythosForgeStoryGeneratorModule(GeminiClientService llmClient, List<PromptResolver> promptResolvers) {
         this.llmClient = llmClient;
+        this.promptResolvers = promptResolvers;
     }
 
     @Override
     public boolean supports(ContentGenerationContext context) {
-        // Este módulo específico sabe gerar histórias e missões para o Mythos Forge
-        List<String> supportedTypes = List.of("HISTORIA_PERSONAGEM", "MISSAO_SECUNDARIA");
-        return supportedTypes.contains(context.getGenerationType());
+        // Delega a responsabilidade para os resolvers. Se algum deles suportar, o módulo também suporta.
+        return promptResolvers.stream().anyMatch(resolver -> resolver.supports(context));
     }
 
     @Override
     public GeneratedContent generate(ContentGenerationContext context) {
-        if (!supports(context)) {
-            return null;
-        }
+        PromptResolver resolver = promptResolvers.stream()
+                .filter(r -> r.supports(context))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Nenhum PromptResolver compatível encontrado para o contexto."));
 
-        if ("HISTORIA_PERSONAGEM".equals(context.getGenerationType())) {
-            // 1. Extrair parâmetros do contexto
-            Map<String, Object> params = context.getParameters();
-            Campaign campaign = (Campaign) params.get("campaign");
-            Race race = (Race) params.get("race");
-            CharacterClass characterClass = (CharacterClass) params.get("class");
+        String finalPrompt = resolver.resolve(context);
 
-            // 2. Usar o PromptBuilder para montar o prompt
-            var campaignSystem = campaign.getSystem();
-            if (campaignSystem == null) {
-                throw new IllegalArgumentException("O sistema da campanha não pode ser nulo.");
-            }
-            SystemDTO system = new SystemDTO(
-                campaignSystem.getId(),
-                campaignSystem.getName(),
-                campaignSystem.getDescription()
-            );
-            String prompt = PromptBuilder.buildNamedPrompt(
-                system,
-                campaign,
-                race.getName(),
-                characterClass.getName()
-            );
+        String llmResponse = llmClient.generateContent(finalPrompt);
 
-            // 3. Chamar a LLM
-            String llmResponse = llmClient.request(prompt);
+        String historia = ResponseParser.extrairHistoriaLimpa(llmResponse);
+        String nome = ResponseParser.extrairNome(llmResponse);
 
-            // 4. Usar o ResponseParser para limpar e extrair dados
-            String historia = ResponseParser.extrairHistoriaLimpa(llmResponse);
-            String nome = ResponseParser.extrairNome(llmResponse);
-
-            // 5. Construir e retornar o objeto de resultado com metadados
-            return GeneratedContent.builder()
-                    .mainText(historia)
-                    .metadata(Map.of("nome", nome)) // Adicionamos o nome extraído aqui
-                    .build();
-        }
-
-        return null;
+        return GeneratedContent.builder()
+                .mainText(historia)
+                .metadata(Map.of("nome", nome))
+                .build();
     }
 
     @Override
-    public String getModuleName() { //TODO: retornar o nome do módulo que está no pom.xml e não uma fixa
-        return "MythosForge Story Generator"; 
+    public String getModuleName() {
+        return "MythosForge Story Generator";
     }
 
     @Override
-    public String getVersion() { //TODO: retornar a versão que está no pom.xml e não uma fixa
-        return "1.0.0";
+    public String getVersion() {
+        return "2.0.0";
     }
 }
-
-

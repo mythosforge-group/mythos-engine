@@ -1,11 +1,12 @@
 package mythosforge.chronicle_architect.modules;
 
-import mythosengine.core.modules.content.ContentGenerationContext;
-import mythosengine.core.modules.content.GeneratedContent;
-import mythosengine.core.modules.content.IContentGeneratorModule;
 import mythosforge.chronicle_architect.llm.LlmClientServiceArchitect;
 import mythosforge.chronicle_architect.models.Book;
 import org.springframework.stereotype.Component;
+
+import mythosengine.spi.content.ContentGenerationContext;
+import mythosengine.spi.content.GeneratedContent;
+import mythosengine.spi.content.IContentGeneratorModule;
 
 @Component
 public class ChapterStructureModule implements IContentGeneratorModule {

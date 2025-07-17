@@ -19,8 +19,8 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import mythosengine.config.security.authentication.service.auth.models.Users;
-import mythosengine.config.security.authentication.service.auth.repository.UserRepository;
+import mythosengine.security.service.auth.models.Users;
+import mythosengine.security.service.auth.repository.UserRepository;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
