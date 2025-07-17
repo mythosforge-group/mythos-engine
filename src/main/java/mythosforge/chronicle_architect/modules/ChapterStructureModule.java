@@ -1,20 +1,22 @@
 package mythosforge.chronicle_architect.modules;
 
-import mythosforge.chronicle_architect.llm.LlmClientServiceArchitect;
-import mythosforge.chronicle_architect.models.Book;
-import org.springframework.stereotype.Component;
-
+import mythosengine.services.llm.GeminiClientService;
 import mythosengine.spi.content.ContentGenerationContext;
 import mythosengine.spi.content.GeneratedContent;
 import mythosengine.spi.content.IContentGeneratorModule;
+import mythosengine.spi.prompt.PromptBuilder;
+import org.springframework.stereotype.Component;
+import java.util.List;
 
 @Component
 public class ChapterStructureModule implements IContentGeneratorModule {
 
-    private final LlmClientServiceArchitect llmClient;
+    private final GeminiClientService llmClient;
+    private final List<PromptBuilder> promptBuilders;
 
-    public ChapterStructureModule(LlmClientServiceArchitect llmClient) {
+    public ChapterStructureModule(GeminiClientService llmClient, List<PromptBuilder> promptBuilders) {
         this.llmClient = llmClient;
+        this.promptBuilders = promptBuilders;
     }
 
     @Override
@@ -24,28 +26,18 @@ public class ChapterStructureModule implements IContentGeneratorModule {
 
     @Override
     public GeneratedContent generate(ContentGenerationContext context) {
-        Book book = (Book) context.getParameters().get("book");
-        if (book == null) {
-            return GeneratedContent.builder().mainText("Erro: Livro não fornecido no contexto.").build();
-        }
-
-        String prompt = String.format(
-            "Aja como um editor de livros de RPG experiente. Para um livro com o título '%s' e a seguinte descrição: '%s', " +
-            "sugira uma lista estruturada de títulos de capítulos. A lista deve ser apenas os títulos, um por linha.",
-            book.getTitle(), book.getDescription()
-        );
-
+        PromptBuilder builder = promptBuilders.stream()
+            .filter(b -> b.supports(context))
+            .findFirst()
+            .orElseThrow(() -> new IllegalStateException("Nenhum PromptBuilder para 'STRUCTURE_CHAPTERS' encontrado."));
+        
+        String prompt = builder.build(context);
         String chapterList = llmClient.generateContent(prompt);
         return GeneratedContent.builder().mainText(chapterList).build();
     }
 
     @Override
-    public String getModuleName() {
-        return "Chapter Structure Generator";
-    }
-
+    public String getModuleName() { return "Chapter Structure Generator"; }
     @Override
-    public String getVersion() {
-        return "1.2.0";
-    }
+    public String getVersion() { return "3.0.0"; }
 }

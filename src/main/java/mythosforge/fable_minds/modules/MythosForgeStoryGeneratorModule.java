@@ -4,7 +4,7 @@ import mythosengine.services.llm.GeminiClientService;
 import mythosengine.spi.content.ContentGenerationContext;
 import mythosengine.spi.content.GeneratedContent;
 import mythosengine.spi.content.IContentGeneratorModule;
-import mythosengine.spi.prompt.PromptResolver; // <-- USA A ABSTRAÇÃO
+import mythosengine.spi.prompt.PromptBuilder;
 import mythosforge.fable_minds.llm.ResponseParser;
 import org.springframework.stereotype.Component;
 
@@ -15,28 +15,26 @@ import java.util.Map;
 public class MythosForgeStoryGeneratorModule implements IContentGeneratorModule {
 
     private final GeminiClientService llmClient;
-    private final List<PromptResolver> promptResolvers; // <-- Injeta uma lista de todas as implementações disponíveis
+    private final List<PromptBuilder> promptBuilders;
 
-    public MythosForgeStoryGeneratorModule(GeminiClientService llmClient, List<PromptResolver> promptResolvers) {
+    public MythosForgeStoryGeneratorModule(GeminiClientService llmClient, List<PromptBuilder> promptBuilders) {
         this.llmClient = llmClient;
-        this.promptResolvers = promptResolvers;
+        this.promptBuilders = promptBuilders;
     }
 
     @Override
     public boolean supports(ContentGenerationContext context) {
-        // Delega a responsabilidade para os resolvers. Se algum deles suportar, o módulo também suporta.
-        return promptResolvers.stream().anyMatch(resolver -> resolver.supports(context));
+        return "HISTORIA_PERSONAGEM".equals(context.getGenerationType());
     }
 
     @Override
     public GeneratedContent generate(ContentGenerationContext context) {
-        PromptResolver resolver = promptResolvers.stream()
-                .filter(r -> r.supports(context))
+        PromptBuilder builder = promptBuilders.stream()
+                .filter(b -> b.supports(context))
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Nenhum PromptResolver compatível encontrado para o contexto."));
+                .orElseThrow(() -> new IllegalStateException("Nenhum PromptBuilder compatível encontrado para o tipo: " + context.getGenerationType()));
 
-        String finalPrompt = resolver.resolve(context);
-
+        String finalPrompt = builder.build(context);
         String llmResponse = llmClient.generateContent(finalPrompt);
 
         String historia = ResponseParser.extrairHistoriaLimpa(llmResponse);
@@ -55,6 +53,6 @@ public class MythosForgeStoryGeneratorModule implements IContentGeneratorModule 
 
     @Override
     public String getVersion() {
-        return "2.0.0";
+        return "3.0.0";
     }
 }

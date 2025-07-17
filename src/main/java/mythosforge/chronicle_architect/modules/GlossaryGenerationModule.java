@@ -1,20 +1,23 @@
 package mythosforge.chronicle_architect.modules;
 
-import mythosforge.chronicle_architect.llm.LlmClientServiceArchitect;
-import mythosforge.chronicle_architect.models.Book;
-import org.springframework.stereotype.Component;
-
+import mythosengine.services.llm.GeminiClientService;
 import mythosengine.spi.content.ContentGenerationContext;
 import mythosengine.spi.content.GeneratedContent;
 import mythosengine.spi.content.IContentGeneratorModule;
+import mythosengine.spi.prompt.PromptBuilder;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class GlossaryGenerationModule implements IContentGeneratorModule {
 
-    private final LlmClientServiceArchitect llmClient;
+    private final GeminiClientService llmClient;
+    private final List<PromptBuilder> promptBuilders;
 
-    public GlossaryGenerationModule(LlmClientServiceArchitect llmClient) {
+    public GlossaryGenerationModule(GeminiClientService llmClient, List<PromptBuilder> promptBuilders) {
         this.llmClient = llmClient;
+        this.promptBuilders = promptBuilders;
     }
 
     @Override
@@ -24,19 +27,13 @@ public class GlossaryGenerationModule implements IContentGeneratorModule {
 
     @Override
     public GeneratedContent generate(ContentGenerationContext context) {
-        Book book = (Book) context.getParameters().get("book");
-        if (book == null || book.getDescription() == null || book.getDescription().isBlank()) {
-            return GeneratedContent.builder().mainText("Erro: Conteúdo do livro não fornecido para gerar o glossário.").build();
-        }
+        PromptBuilder builder = promptBuilders.stream()
+            .filter(b -> b.supports(context))
+            .findFirst()
+            .orElseThrow(() -> new IllegalStateException("Nenhum PromptBuilder para 'GENERATE_GLOSSARY' encontrado."));
 
-        String prompt = String.format(
-            "Analise o seguinte texto de um livro de RPG: '%s'. " +
-            "Extraia de 5 a 10 termos chave que seriam úteis em um glossário. " +
-            "Retorne a lista no formato 'Termo: Definição concisa.', com um termo por linha.",
-            book.getDescription()
-        );
-
-        String glossaryContent = llmClient.generateContent(prompt); 
+        String prompt = builder.build(context);
+        String glossaryContent = llmClient.generateContent(prompt);
         return GeneratedContent.builder().mainText(glossaryContent).build();
     }
 
@@ -47,6 +44,6 @@ public class GlossaryGenerationModule implements IContentGeneratorModule {
 
     @Override
     public String getVersion() {
-        return "1.2.0";
+        return "3.0.0";
     }
 }
