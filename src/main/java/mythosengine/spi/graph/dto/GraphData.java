@@ -1,4 +1,4 @@
-package mythosengine.spi.lineage.dto;
+package mythosengine.spi.graph.dto;
 
 import java.util.Set;
 

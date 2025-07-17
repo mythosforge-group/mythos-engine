@@ -1,4 +1,4 @@
-package mythosengine.spi.lineage.dto;
+package mythosengine.spi.graph.dto;
 
 /**
  * Representa uma aresta (conexão) direcionada entre dois nós.

@@ -1,12 +1,13 @@
 package mythosforge.chronicle_architect.visualizer;
 
-import mythosengine.spi.lineage.GraphVisualizer;
-import mythosengine.spi.lineage.dto.GraphData;
-import mythosengine.spi.lineage.dto.GraphEdge;
-import mythosengine.spi.lineage.dto.GraphNode;
-import mythosengine.spi.lineage.dto.VisualizationOptions;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
+
+import mythosengine.spi.graph.GraphVisualizer;
+import mythosengine.spi.graph.dto.GraphData;
+import mythosengine.spi.graph.dto.GraphEdge;
+import mythosengine.spi.graph.dto.GraphNode;
+import mythosengine.spi.graph.dto.VisualizationOptions;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Set;

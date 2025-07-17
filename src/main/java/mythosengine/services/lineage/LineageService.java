@@ -1,13 +1,13 @@
-package mythosengine.spi.lineage;
+package mythosengine.services.lineage;
 
 import mythosengine.core.entity.Entity;
 import mythosengine.core.persistence.PersistencePort;
 import mythosengine.services.storage.InMemoryStorageAdapter;
 import mythosengine.services.storage.JsonFileStorageAdapter;
-import mythosengine.spi.lineage.dto.GraphData;
-import mythosengine.spi.lineage.dto.GraphEdge;
-import mythosengine.spi.lineage.dto.GraphNode;
-import mythosengine.spi.lineage.dto.TraversalDirection;
+import mythosengine.spi.graph.dto.GraphData;
+import mythosengine.spi.graph.dto.GraphEdge;
+import mythosengine.spi.graph.dto.GraphNode;
+import mythosengine.spi.graph.dto.TraversalDirection;
 
 import org.springframework.stereotype.Service;
 

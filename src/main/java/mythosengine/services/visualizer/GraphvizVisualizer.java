@@ -4,10 +4,10 @@ import guru.nidi.graphviz.attribute.Label;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 import guru.nidi.graphviz.model.MutableGraph;
-import mythosengine.spi.lineage.GraphVisualizer;
-import mythosengine.spi.lineage.dto.GraphData;
-import mythosengine.spi.lineage.dto.GraphNode;
-import mythosengine.spi.lineage.dto.VisualizationOptions;
+import mythosengine.spi.graph.GraphVisualizer;
+import mythosengine.spi.graph.dto.GraphData;
+import mythosengine.spi.graph.dto.GraphNode;
+import mythosengine.spi.graph.dto.VisualizationOptions;
 
 import org.springframework.stereotype.Component;
 

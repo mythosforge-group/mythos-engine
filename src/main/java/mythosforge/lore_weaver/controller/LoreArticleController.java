@@ -6,13 +6,13 @@ import mythosforge.lore_weaver.models.LoreArticle;
 import mythosforge.lore_weaver.services.LoreArticleService;
 import jakarta.persistence.EntityNotFoundException;
 import mythosengine.core.engine.ContentGenerationEngine;
+import mythosengine.services.lineage.LineageService;
 import mythosengine.spi.content.ContentGenerationContext;
 import mythosengine.spi.content.GeneratedContent;
-import mythosengine.spi.lineage.GraphVisualizer;
-import mythosengine.spi.lineage.LineageService;
-import mythosengine.spi.lineage.dto.GraphData;
-import mythosengine.spi.lineage.dto.TraversalDirection;
-import mythosengine.spi.lineage.dto.VisualizationOptions;
+import mythosengine.spi.graph.GraphVisualizer;
+import mythosengine.spi.graph.dto.GraphData;
+import mythosengine.spi.graph.dto.TraversalDirection;
+import mythosengine.spi.graph.dto.VisualizationOptions;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

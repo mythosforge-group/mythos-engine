@@ -1,6 +1,6 @@
-package mythosengine.spi.lineage;
-import mythosengine.spi.lineage.dto.GraphData;
-import mythosengine.spi.lineage.dto.VisualizationOptions;
+package mythosengine.spi.graph;
+import mythosengine.spi.graph.dto.GraphData;
+import mythosengine.spi.graph.dto.VisualizationOptions;
 /**
  * Interface para componentes capazes de transformar uma estrutura de dados de grafo
  * em uma representação visual (ex: uma imagem).
