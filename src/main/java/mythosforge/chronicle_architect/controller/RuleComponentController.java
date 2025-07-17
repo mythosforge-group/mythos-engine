@@ -1,5 +1,10 @@
 package mythosforge.chronicle_architect.controller;
 
+import mythosengine.spi.lineage.GraphVisualizer;
+import mythosengine.spi.lineage.LineageService;
+import mythosengine.spi.lineage.dto.GraphData;
+import mythosengine.spi.lineage.dto.TraversalDirection;
+import mythosengine.spi.lineage.dto.VisualizationOptions;
 import mythosforge.chronicle_architect.models.RuleComponent;
 import mythosforge.chronicle_architect.models.SkillComponent;
 import mythosforge.chronicle_architect.service.RuleComponentService;
@@ -7,14 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import mythosengine.spi.lineage.GraphVisualizer;
-import mythosengine.spi.lineage.LineageService;
-import mythosengine.spi.lineage.dto.GraphData;
-import mythosengine.spi.lineage.dto.TraversalDirection;
-import mythosengine.spi.lineage.dto.VisualizationOptions;
-
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -23,9 +21,11 @@ public class RuleComponentController {
 
     private final RuleComponentService ruleComponentService;
     private final LineageService lineageService;
-    private final GraphVisualizer graphVisualizer;
+    private final GraphVisualizer graphVisualizer; // Injeta a interface do framework
 
-    public RuleComponentController(RuleComponentService ruleComponentService, LineageService lineageService, GraphVisualizer graphVisualizer) {
+    public RuleComponentController(RuleComponentService ruleComponentService,
+                                 LineageService lineageService,
+                                 GraphVisualizer graphVisualizer) { // O Spring injeta a implementação @Primary
         this.ruleComponentService = ruleComponentService;
         this.lineageService = lineageService;
         this.graphVisualizer = graphVisualizer;
@@ -47,11 +47,13 @@ public class RuleComponentController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{ruleId}/dependency-graph")
+    @GetMapping(value = "/{ruleId}/dependency-graph", produces = "text/plain;charset=UTF-8")
     public ResponseEntity<byte[]> getDependencyGraph(@PathVariable Long ruleId) throws Exception {
+        // 1. O Controller busca a entidade da aplicação.
         RuleComponent component = ruleComponentService.findById(ruleId);
         UUID entityId = component.getEntityId();
 
+        // 2. O Controller usa o serviço do framework para obter os DADOS do grafo.
         GraphData graphData = lineageService.buildGraph(
                 entityId,
                 "HAS_PREREQUISITE",
@@ -59,15 +61,17 @@ public class RuleComponentController {
                 10 // Profundidade da busca
         );
 
+        // 3. O Controller define as opções de visualização, pedindo um 'txt'.
         VisualizationOptions options = VisualizationOptions.builder()
-                .outputFormat("png")
-                .graphAttributes(Map.of("rankdir", "BT")) // Bottom to Top
+                .outputFormat("txt") // <-- Especifica o formato que a implementação customizada suporta.
                 .build();
 
-        byte[] imageBytes = graphVisualizer.visualize(graphData, options);
+        // 4. O Controller chama a implementação injetada para renderizar o resultado.
+        byte[] asciiGraphBytes = graphVisualizer.visualize(graphData, options);
 
+        // 5. Retorna a resposta com o Content-Type correto para texto.
         return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_PNG)
-                .body(imageBytes);
+                .contentType(MediaType.TEXT_PLAIN)
+                .body(asciiGraphBytes);
     }
 }
