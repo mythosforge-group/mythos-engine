@@ -27,30 +27,53 @@ public class AsciiDependencyGraphVisualizer implements GraphVisualizer {
             return "Grafo vazio.".getBytes(StandardCharsets.UTF_8);
         }
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("=== Grafo de Dependências de Regras ===\n\n");
-
-        // Encontra os nós que não são alvo de nenhuma aresta (os nós principais)
         Set<String> targetNodes = data.edges().stream()
-                .map(GraphEdge::toId) // CORRIGIDO: de targetId para toId
+                .map(GraphEdge::toId)
                 .collect(Collectors.toSet());
 
         Set<GraphNode> rootNodes = data.nodes().stream()
                 .filter(node -> !targetNodes.contains(node.id()))
                 .collect(Collectors.toSet());
 
+        String entityType;
+        if (!rootNodes.isEmpty()) {
+            // Pega o arquétipo do primeiro nó raiz encontrado
+            GraphNode rootNode = rootNodes.iterator().next();
+            entityType = mapArchetypeToPortuguese(rootNode.archetype());
+        } else {
+            entityType = "Entidade";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("=== Grafo de Dependências de %s ===\n\n", entityType));
+
         // Começa a impressão a partir dos nós raiz
         for (GraphNode rootNode : rootNodes) {
             printNode(rootNode.id(), data, "", true, sb);
         }
 
-        sb.append("\n=====================================\n");
         return sb.toString().getBytes(StandardCharsets.UTF_8);
     }
 
     /**
-     * Método recursivo para imprimir a árvore de dependências.
+     * Mapeia o nome técnico do arquétipo para um nome amigável em português.
      */
+    private String mapArchetypeToPortuguese(String archetype) {
+        if (archetype == null) {
+            return "Entidade";
+        }
+        return switch (archetype.toLowerCase()) {
+            case "book" -> "Livro";
+            case "chapter" -> "Capítulo";
+            case "glossaryterm" -> "Termo do Glossário";
+            case "rule" -> "Regra";
+            case "rulecomponent" -> "Componente de Regra";
+            case "skillcomponent" -> "Habilidade";
+            
+            default -> archetype;
+        };
+    }
+
     private void printNode(String nodeId, GraphData data, String prefix, boolean isTail, StringBuilder sb) {
         GraphNode currentNode = data.nodes().stream()
                 .filter(n -> n.id().equals(nodeId))
@@ -60,16 +83,14 @@ public class AsciiDependencyGraphVisualizer implements GraphVisualizer {
 
         sb.append(prefix).append(isTail ? "└── " : "├── ").append(currentNode.label()).append("\n");
 
-        // Encontra todas as arestas que saem deste nó (seus pré-requisitos)
         Set<GraphEdge> prerequisites = data.edges().stream()
-                .filter(edge -> edge.fromId().equals(nodeId)) // CORRIGIDO: de sourceId() para fromId()
+                .filter(edge -> edge.fromId().equals(nodeId))
                 .collect(Collectors.toSet());
 
         int count = 0;
         for (GraphEdge edge : prerequisites) {
             count++;
-            // Continua a recursão para o pré-requisito
-            printNode(edge.toId(), data, prefix + (isTail ? "    " : "│   "), count == prerequisites.size(), sb); // CORRIGIDO: de targetId() para toId()
+            printNode(edge.toId(), data, prefix + (isTail ? "    " : "│   "), count == prerequisites.size(), sb);
         }
     }
 }

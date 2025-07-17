@@ -49,11 +49,9 @@ public class RuleComponentController {
 
     @GetMapping(value = "/{ruleId}/dependency-graph", produces = "text/plain;charset=UTF-8")
     public ResponseEntity<byte[]> getDependencyGraph(@PathVariable Long ruleId) throws Exception {
-        // 1. O Controller busca a entidade da aplicação.
         RuleComponent component = ruleComponentService.findById(ruleId);
         UUID entityId = component.getEntityId();
 
-        // 2. O Controller usa o serviço do framework para obter os DADOS do grafo.
         GraphData graphData = lineageService.buildGraph(
                 entityId,
                 "HAS_PREREQUISITE",
@@ -61,15 +59,12 @@ public class RuleComponentController {
                 10 // Profundidade da busca
         );
 
-        // 3. O Controller define as opções de visualização, pedindo um 'txt'.
         VisualizationOptions options = VisualizationOptions.builder()
-                .outputFormat("txt") // <-- Especifica o formato que a implementação customizada suporta.
+                .outputFormat("txt")
                 .build();
 
-        // 4. O Controller chama a implementação injetada para renderizar o resultado.
         byte[] asciiGraphBytes = graphVisualizer.visualize(graphData, options);
 
-        // 5. Retorna a resposta com o Content-Type correto para texto.
         return ResponseEntity.ok()
                 .contentType(MediaType.TEXT_PLAIN)
                 .body(asciiGraphBytes);

@@ -103,6 +103,6 @@ public class LineageService {
         entity.getProperty("ocupacao").ifPresent(value -> properties.put("ocupacao", value.toString()));
         entity.getProperty("origem").ifPresent(value -> properties.put("origem", value.toString()));
 
-        return new GraphNode(entity.getId().toString(), label, properties);
+        return new GraphNode(entity.getId().toString(), label, entity.getArchetype(), properties);
     }
 }

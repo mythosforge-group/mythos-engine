@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @Transactional
@@ -40,7 +39,6 @@ public class RuleComponentService {
         return repository.findAll();
     }
 
-    // Método crucial para a visualização de grafos
     public void addPrerequisite(Long skillId, Long prerequisiteId) {
         RuleComponent skill = findById(skillId);
         RuleComponent prerequisite = findById(prerequisiteId);
