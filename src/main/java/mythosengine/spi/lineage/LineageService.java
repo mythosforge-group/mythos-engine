@@ -71,7 +71,7 @@ public class LineageService {
 
     private void traverseUpstream(Entity currentEntity, String relationshipType, TraversalDirection direction, int maxDepth, int currentDepth, Set<GraphNode> nodes, Set<GraphEdge> edges, Set<UUID> visited) {
 
-        Collection<Entity> allEntities;
+        Collection<Entity> allEntities = persistencePort.findAll();
         if (persistencePort instanceof InMemoryStorageAdapter adapter) {
             allEntities = adapter.findAll();
         } else if (persistencePort instanceof JsonFileStorageAdapter adapter) {

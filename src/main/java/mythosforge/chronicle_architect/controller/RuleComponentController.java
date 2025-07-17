@@ -21,11 +21,11 @@ public class RuleComponentController {
 
     private final RuleComponentService ruleComponentService;
     private final LineageService lineageService;
-    private final GraphVisualizer graphVisualizer; // Injeta a interface do framework
+    private final GraphVisualizer graphVisualizer;
 
     public RuleComponentController(RuleComponentService ruleComponentService,
                                  LineageService lineageService,
-                                 GraphVisualizer graphVisualizer) { // O Spring injeta a implementação @Primary
+                                 GraphVisualizer graphVisualizer) {
         this.ruleComponentService = ruleComponentService;
         this.lineageService = lineageService;
         this.graphVisualizer = graphVisualizer;

@@ -9,14 +9,13 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         "mythosforge.chronicle_architect",
         "mythosengine"
 })
-
 @EnableJpaRepositories(basePackages = {
         "mythosforge.chronicle_architect.repository",
-        "mythosengine.config.security.authentication.service.auth.repository" 
+        "mythosengine.security.service.auth.repository"
 })
 @EntityScan(basePackages = {
         "mythosforge.chronicle_architect.models",
-        "mythosengine.config.security.authentication.service.auth.models",
+        "mythosengine.security.service.auth.models",
         "mythosengine.core.entity"
 })
 public class ChronicleArchitectApplication {

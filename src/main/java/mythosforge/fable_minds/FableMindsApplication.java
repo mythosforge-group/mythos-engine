@@ -10,12 +10,12 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         "mythosengine"
 })
 @EnableJpaRepositories(basePackages = {
-        "mythosforge.fable_minds.repository", 
-        "mythosengine.config.security.authentication.service.auth.repository"
+        "mythosforge.fable_minds.repository",
+        "mythosengine.security.service.auth.repository"
 })
 @EntityScan(basePackages = {
-        "mythosforge.fable_minds.models", 
-        "mythosengine.config.security.authentication.service.auth.models",
+        "mythosforge.fable_minds.models",
+        "mythosengine.security.service.auth.models",
         "mythosengine.core.entity"
 })
 public class FableMindsApplication {
@@ -23,5 +23,4 @@ public class FableMindsApplication {
     public static void main(String[] args) {
         SpringApplication.run(FableMindsApplication.class, args);
     }
-
 }
