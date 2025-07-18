@@ -1,7 +1,5 @@
 package mythosforge.fable_minds.modules;
 
-import mythosengine.core.modules.content.ContentGenerationContext;
-import mythosengine.core.modules.content.GeneratedContent;
 import mythosforge.fable_minds.llm.LlmClientService;
 import mythosforge.fable_minds.models.Campaign;
 import mythosforge.fable_minds.models.CharacterClass;
@@ -13,6 +11,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import mythosengine.spi.content.ContentGenerationContext;
+import mythosengine.spi.content.GeneratedContent;
 
 import java.util.Map;
 

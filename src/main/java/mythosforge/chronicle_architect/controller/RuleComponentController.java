@@ -1,10 +1,5 @@
 package mythosforge.chronicle_architect.controller;
 
-import mythosengine.services.lineage.LineageService;
-import mythosengine.services.lineage.dto.GraphData;
-import mythosengine.services.lineage.dto.TraversalDirection;
-import mythosengine.services.lineage.visualizer.GraphVisualizer;
-import mythosengine.services.lineage.visualizer.VisualizationOptions;
 import mythosforge.chronicle_architect.models.RuleComponent;
 import mythosforge.chronicle_architect.models.SkillComponent;
 import mythosforge.chronicle_architect.service.RuleComponentService;
@@ -12,8 +7,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import mythosengine.services.lineage.LineageService;
+import mythosengine.spi.graph.GraphVisualizer;
+import mythosengine.spi.graph.dto.GraphData;
+import mythosengine.spi.graph.dto.TraversalDirection;
+import mythosengine.spi.graph.dto.VisualizationOptions;
+
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -24,7 +24,9 @@ public class RuleComponentController {
     private final LineageService lineageService;
     private final GraphVisualizer graphVisualizer;
 
-    public RuleComponentController(RuleComponentService ruleComponentService, LineageService lineageService, GraphVisualizer graphVisualizer) {
+    public RuleComponentController(RuleComponentService ruleComponentService,
+                                 LineageService lineageService,
+                                 GraphVisualizer graphVisualizer) {
         this.ruleComponentService = ruleComponentService;
         this.lineageService = lineageService;
         this.graphVisualizer = graphVisualizer;
@@ -46,7 +48,7 @@ public class RuleComponentController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{ruleId}/dependency-graph")
+    @GetMapping(value = "/{ruleId}/dependency-graph", produces = "text/plain;charset=UTF-8")
     public ResponseEntity<byte[]> getDependencyGraph(@PathVariable Long ruleId) throws Exception {
         RuleComponent component = ruleComponentService.findById(ruleId);
         UUID entityId = component.getEntityId();
@@ -59,14 +61,13 @@ public class RuleComponentController {
         );
 
         VisualizationOptions options = VisualizationOptions.builder()
-                .outputFormat("png")
-                .graphAttributes(Map.of("rankdir", "BT")) // Bottom to Top
+                .outputFormat("txt")
                 .build();
 
-        byte[] imageBytes = graphVisualizer.visualize(graphData, options);
+        byte[] asciiGraphBytes = graphVisualizer.visualize(graphData, options);
 
         return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_PNG)
-                .body(imageBytes);
+                .contentType(MediaType.TEXT_PLAIN)
+                .body(asciiGraphBytes);
     }
 }

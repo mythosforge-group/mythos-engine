@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import mythosengine.config.security.authentication.dto.UpdateUserDTO;
-import mythosengine.config.security.authentication.dto.UserRegisterDTO;
-import mythosengine.config.security.authentication.service.auth.models.Users;
+import mythosengine.security.dto.UpdateUserDTO;
+import mythosengine.security.dto.UserRegisterDTO;
+import mythosengine.security.service.auth.models.Users;
 import mythosforge.fable_minds.models.ErrorResponse;
 import mythosforge.fable_minds.service.UserService;
 

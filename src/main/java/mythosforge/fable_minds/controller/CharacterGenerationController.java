@@ -2,15 +2,14 @@ package mythosforge.fable_minds.controller;
 
 
 import jakarta.persistence.EntityNotFoundException;
-import mythosengine.core.ContentGenerationEngine;
-import mythosengine.core.modules.content.ContentGenerationContext;
-import mythosengine.core.modules.content.GeneratedContent;
+import mythosengine.core.engine.ContentGenerationEngine;
 import mythosengine.services.lineage.LineageService;
-import mythosengine.services.lineage.dto.GraphData;
-import mythosengine.services.lineage.dto.TraversalDirection;
-import mythosengine.services.lineage.visualizer.GraphVisualizer;
-import mythosengine.services.lineage.visualizer.VisualizationOptions;
-
+import mythosengine.spi.content.ContentGenerationContext;
+import mythosengine.spi.content.GeneratedContent;
+import mythosengine.spi.graph.GraphVisualizer;
+import mythosengine.spi.graph.dto.GraphData;
+import mythosengine.spi.graph.dto.TraversalDirection;
+import mythosengine.spi.graph.dto.VisualizationOptions;
 import mythosforge.fable_minds.models.*;
 import mythosforge.fable_minds.service.*;
 import org.springframework.http.MediaType;

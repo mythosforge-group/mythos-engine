@@ -2,12 +2,13 @@ package mythosengine.services.lineage;
 
 import mythosengine.core.entity.Entity;
 import mythosengine.core.persistence.PersistencePort;
-import mythosengine.services.lineage.dto.GraphData;
-import mythosengine.services.lineage.dto.GraphEdge;
-import mythosengine.services.lineage.dto.GraphNode;
-import mythosengine.services.lineage.dto.TraversalDirection;
 import mythosengine.services.storage.InMemoryStorageAdapter;
 import mythosengine.services.storage.JsonFileStorageAdapter;
+import mythosengine.spi.graph.dto.GraphData;
+import mythosengine.spi.graph.dto.GraphEdge;
+import mythosengine.spi.graph.dto.GraphNode;
+import mythosengine.spi.graph.dto.TraversalDirection;
+
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -70,7 +71,7 @@ public class LineageService {
 
     private void traverseUpstream(Entity currentEntity, String relationshipType, TraversalDirection direction, int maxDepth, int currentDepth, Set<GraphNode> nodes, Set<GraphEdge> edges, Set<UUID> visited) {
 
-        Collection<Entity> allEntities;
+        Collection<Entity> allEntities = persistencePort.findAll();
         if (persistencePort instanceof InMemoryStorageAdapter adapter) {
             allEntities = adapter.findAll();
         } else if (persistencePort instanceof JsonFileStorageAdapter adapter) {
@@ -102,6 +103,6 @@ public class LineageService {
         entity.getProperty("ocupacao").ifPresent(value -> properties.put("ocupacao", value.toString()));
         entity.getProperty("origem").ifPresent(value -> properties.put("origem", value.toString()));
 
-        return new GraphNode(entity.getId().toString(), label, properties);
+        return new GraphNode(entity.getId().toString(), label, entity.getArchetype(), properties);
     }
 }

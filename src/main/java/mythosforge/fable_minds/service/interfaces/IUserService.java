@@ -3,8 +3,8 @@ package mythosforge.fable_minds.service.interfaces;
 import java.util.List;
 import java.util.Optional;
 
-import mythosengine.config.security.authentication.dto.UpdateUserDTO;
-import mythosengine.config.security.authentication.service.auth.models.Users;
+import mythosengine.security.dto.UpdateUserDTO;
+import mythosengine.security.service.auth.models.Users;
 
 public interface IUserService {
     Users createUser(Users user);

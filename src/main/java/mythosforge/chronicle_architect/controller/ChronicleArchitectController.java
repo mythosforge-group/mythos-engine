@@ -1,8 +1,8 @@
 package mythosforge.chronicle_architect.controller;
 
-import mythosengine.core.ContentGenerationEngine;
-import mythosengine.core.modules.content.ContentGenerationContext;
-import mythosengine.core.modules.content.GeneratedContent;
+import mythosengine.core.engine.ContentGenerationEngine;
+import mythosengine.spi.content.ContentGenerationContext;
+import mythosengine.spi.content.GeneratedContent;
 import mythosforge.chronicle_architect.models.Book;
 import mythosforge.chronicle_architect.service.ChronicleArchitectService;
 import org.springframework.http.ResponseEntity;

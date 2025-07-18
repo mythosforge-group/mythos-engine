@@ -6,16 +6,16 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication(scanBasePackages = {
-        "mythosforge.lore_weaver", // Escaneia apenas componentes da sua própria aplicação
-        "mythosengine"             // e os componentes do framework
+        "mythosforge.lore_weaver",
+        "mythosengine"
 })
 @EnableJpaRepositories(basePackages = {
         "mythosforge.lore_weaver.repository",
-        "mythosengine.config.security.authentication.service.auth.repository"
+        "mythosengine.security.service.auth.repository"
 })
 @EntityScan(basePackages = {
         "mythosforge.lore_weaver.models",
-        "mythosengine.config.security.authentication.service.auth.models",
+        "mythosengine.security.service.auth.models",
         "mythosengine.core.entity"
 })
 public class LoreWeaverApplication {

@@ -1,10 +1,9 @@
 package mythosengine.services.storage;
 
-// services/storage/InMemoryStorageAdapter.java
 import mythosengine.core.entity.Entity;
 import mythosengine.core.persistence.PersistencePort;
+import org.springframework.context.annotation.Profile; // Importação adicionada
 import org.springframework.stereotype.Repository;
-import org.springframework.context.annotation.Primary;
 
 import java.util.Collection;
 import java.util.Map;
@@ -13,6 +12,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
+@Profile("test") // <-- ADICIONADO: Este bean só será criado quando o perfil "test" estiver ativo.
 public class InMemoryStorageAdapter implements PersistencePort {
     private final Map<UUID, Entity> database = new ConcurrentHashMap<>();
 
@@ -28,6 +28,7 @@ public class InMemoryStorageAdapter implements PersistencePort {
         return Optional.ofNullable(database.get(entityId));
     }
 
+    @Override
     public Collection<Entity> findAll() {
         System.out.println("STORAGE(InMemory): Retornando snapshot de todas as " + database.size() + " entidades.");
         return database.values();

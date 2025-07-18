@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import mythosengine.config.security.authentication.dto.UpdateUserDTO;
-import mythosengine.config.security.authentication.service.auth.models.Users;
-import mythosengine.config.security.authentication.service.auth.repository.UserRepository;
+import mythosengine.security.dto.UpdateUserDTO;
+import mythosengine.security.service.auth.models.Users;
+import mythosengine.security.service.auth.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
